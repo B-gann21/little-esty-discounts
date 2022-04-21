@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   patch "/items/:id", to: 'items#update'
 
   get 'merchants/:id/dashboard', to: 'merchants#show'
+
+  get '/merchants/:id/bulk_discounts', to: 'bulk_discounts#index'
+
   get 'merchants/:id/invoices', to: 'merchant_invoices#index'
   get 'merchants/:merchant_id/invoices/:invoice_id', to: 'merchant_invoices#show'
   patch 'merchants/:merchant_id/invoices/:invoice_id', to: 'merchant_invoices#update'
@@ -26,6 +29,4 @@ Rails.application.routes.draw do
   patch '/admin/invoices/:id', to: 'admin_invoices#update'
 
   get '/admin', to: 'admin#index'
-
-  get '/github_info', to: 'github_info#show'
 end
