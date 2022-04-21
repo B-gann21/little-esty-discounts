@@ -2,7 +2,8 @@
 
 <% @merchant.bulk_discounts.each do |discount| %>
   <div id="discount-<%= discount.id %>">
-    <ul>Discount <%= discount.id %><br>
+    <ul>
+      <h3>Discount <%= discount.id %></h3>
       <li>Quantity threshold: <%= discount.quantity_threshold %></li>
       <li>Discount percentage: <%= discount.discount_percent %></li>
     </ul>
