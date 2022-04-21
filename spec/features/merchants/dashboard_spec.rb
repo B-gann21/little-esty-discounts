@@ -70,14 +70,19 @@ RSpec.describe 'merchant dashboard' do
   end
 
   context 'links' do
-    it 'displays links to the merchant items index' do
-      click_link "Merchant's Items"
+    it 'displays link to the merchant items index' do
+      click_link "#{@merchant.name}'s Items"
       expect(current_path).to eq("/merchants/#{@merchant.id}/items")
     end
 
-    it 'displays links to the merchant invoices index' do
-      click_link "Merchant's Invoices"
+    it 'displays link to the merchant invoices index' do
+      click_link "#{@merchant.name}'s Invoices"
       expect(current_path).to eq("/merchants/#{@merchant.id}/invoices")
+    end
+
+    it 'displays link to the bulk discounts index' do
+      click_link "#{@merchant.name}'s Bulk Discounts"
+      expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts")
     end
   end
 
