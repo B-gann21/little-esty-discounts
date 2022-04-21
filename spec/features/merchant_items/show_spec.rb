@@ -14,13 +14,5 @@ RSpec.describe 'merchant items show page' do
       expect(page).to have_content("#{item_1.description}")
       expect(page).to_not have_content("#{item_2.name}")
     end
-
-    it 'should have a link to the github info page' do
-      merchant = Merchant.create!(name: 'Brylan')
-      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
-
-      visit "/merchants/#{merchant.id}/items/#{item_1.id}"
-      expect(page).to have_link('GitHub Repository info')
-    end
   end
 end

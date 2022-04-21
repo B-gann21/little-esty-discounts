@@ -40,12 +40,4 @@ RSpec.describe 'edit merchant items show page' do
       expect(page).to have_content("Success: The information has been successfully updated")
     end
   end
-
-  it 'should have a link to the github info page' do
-    merchant = Merchant.create!(name: 'Yeti')
-    item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
-
-    visit "/merchants/#{merchant.id}/items/#{item_1.id}"
-    expect(page).to have_link('GitHub Repository info')
-  end
 end

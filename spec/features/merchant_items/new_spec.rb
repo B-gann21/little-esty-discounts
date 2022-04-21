@@ -31,11 +31,4 @@ RSpec.describe 'When I visit the merchant items index page' do
     expect(current_path).to eq("/merchants/#{merchant.id}/items")
     expect(page).to have_content('test')
   end
-
-  it 'should have a link to the github info page' do
-    merchant = Merchant.create!(name: 'Brylan')
-
-    visit "/merchants/#{merchant.id}/items/new"
-    expect(page).to have_link('GitHub Repository info')
-  end
 end

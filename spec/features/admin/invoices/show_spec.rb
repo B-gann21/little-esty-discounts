@@ -15,7 +15,7 @@ RSpec.describe 'Admin Invoice Show' do
     @item_2.invoice_items.create!(invoice_id: @invoice_1.id, quantity: 3, unit_price: 400, status: 2)
     @item_3.invoice_items.create!(invoice_id: @invoice_1.id, quantity: 3, unit_price: 400, status: 2)
   end
-  
+
   describe 'Admin Invoice Show Page' do
     it 'lists Invoice id, status, created at and customer name' do
 
@@ -37,14 +37,6 @@ RSpec.describe 'Admin Invoice Show' do
       click_button 'Change Status'
       expect(current_path).to eq("/admin/invoices/#{@invoice_1.id}")
       expect(page).to have_content('cancelled')
-    end
-
-    it 'has a link to the github info page' do
-      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
-      invoice_1 = customer.invoices.create(status: "in progress")
-
-      visit "/admin/invoices/#{invoice_1.id}"
-      expect(page).to have_link('GitHub Repository info')
     end
 
     it 'Then I see all of the items on the invoice' do

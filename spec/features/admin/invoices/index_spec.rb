@@ -14,11 +14,5 @@ RSpec.describe 'Admin Invoice Index' do
       expect(page).to have_link("#{invoice_2.id}")
       expect(page).to have_link("#{invoice_3.id}")
     end
-
-    it 'should have a link to the github info page' do
-      visit "/admin/invoices"
-
-      expect(page).to have_link('GitHub Repository info')
-    end
   end
 end

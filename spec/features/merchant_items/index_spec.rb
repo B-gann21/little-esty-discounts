@@ -122,13 +122,6 @@ RSpec.describe 'merchant items index page' do
       expect(current_path).to eq("/merchants/#{merchant.id}/items/#{item_5.id}")
     end
 
-    it 'should have a link to the github info page' do
-      merchant = Merchant.create!(name: 'Brylan')
-
-      visit "/merchants/#{merchant.id}/items"
-      expect(page).to have_link('GitHub Repository info')
-    end
-    
     it 'Next to each of the top 5 items I see the date with the most sales for each item with the label Top selling date for was' do
       merchant = Merchant.create!(name: 'Brylan')
 
