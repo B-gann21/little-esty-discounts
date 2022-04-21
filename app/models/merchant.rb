@@ -1,5 +1,6 @@
 class Merchant < ApplicationRecord
   validates_presence_of :name
+  has_many :bulk_discounts, dependent: :destroy
   has_many :items, dependent: :destroy
   has_many :invoice_items, through: :items
   has_many :invoices, through: :invoice_items
@@ -7,7 +8,7 @@ class Merchant < ApplicationRecord
   has_many :customers, through: :invoices
   enum status: ["disabled", "enabled"]
 
-  def top_five_customers    
+  def top_five_customers
     customers.select("customers.*, count(transactions) as transaction_count")
              .joins(invoices: :transactions)
              .where(transactions: {result: 'success'})
