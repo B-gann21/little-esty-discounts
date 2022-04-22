@@ -7,5 +7,6 @@
       <li>Quantity threshold: <%= discount.quantity_threshold %></li>
       <li>Discount percentage: <%= discount.discount_percent %></li>
     </ul>
+    <%= link_to "Delete discount", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}/destroy" %>
   </div>
 <% end %>
