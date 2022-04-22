@@ -61,9 +61,5 @@ RSpec.describe InvoiceItem do
     it 'can calculate the items total revenue' do
       expect(InvoiceItem.items_total_revenue).to eq(119088)
     end
-
-    it 'can return invoices with items that have not shipped' do
-      expect(InvoiceItem.incomplete_invoices.count).to eq(1)
-    end
   end
 end

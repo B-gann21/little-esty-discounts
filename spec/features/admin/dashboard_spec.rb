@@ -95,7 +95,7 @@ RSpec.describe 'Admin Dashboard' do
       invoice_4 = customer_1.invoices.create!(status: 'completed')
       invoice_5 = customer_1.invoices.create!(status: 'completed')
       item_1.invoice_items.create!(invoice_id: invoice_1.id, quantity: 3, unit_price: 400, status: 'packaged')
-      item_2.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 400, status: 'pending')
+      item_2.invoice_items.create!(invoice_id: invoice_1.id, quantity: 5, unit_price: 400, status: 'pending')
       item_3.invoice_items.create!(invoice_id: invoice_3.id, quantity: 5, unit_price: 400, status: 'packaged')
       item_4.invoice_items.create!(invoice_id: invoice_4.id, quantity: 5, unit_price: 400, status: 'packaged')
       item_5.invoice_items.create!(invoice_id: invoice_5.id, quantity: 5, unit_price: 400, status: 'shipped')
@@ -104,7 +104,7 @@ RSpec.describe 'Admin Dashboard' do
       expect(page).to have_content("Incomplete Invoices")
 
       within '#incomplete_invoices' do
-        expect(page).to have_link("#{invoice_1.id}")
+        expect(page).to have_link("#{invoice_1.id}", count: 1)
         expect(page).to have_link("#{invoice_2.id}")
         expect(page).to have_link("#{invoice_3.id}")
         expect(page).to have_link("#{invoice_4.id}")
