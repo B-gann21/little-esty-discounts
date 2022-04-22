@@ -1,4 +1,4 @@
-require 'rails helper'
+require 'rails_helper'
 
 RSpec.describe 'the edit discount form' do
   before :each do
@@ -24,7 +24,7 @@ RSpec.describe 'the edit discount form' do
     expect(page).to have_content("Quantity threshold: 10")
     expect(page).to_not have_content("Quantity threshold: 15")
 
-    click_link "Edit discount"
+    click_link "Edit Discount"
     fill_in :quantity_threshold, with: '15'
     click_button 'Submit'
 

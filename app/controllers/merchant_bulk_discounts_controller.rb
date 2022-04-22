@@ -17,10 +17,10 @@ class MerchantBulkDiscountsController < ApplicationController
 
     if params[:quantity_threshold].empty? || params[:discount_percent].empty?
       flash[:notice] = "fields can not be empty"
-      redirect_to "/merchants/#{@merchant.id}/bulk_discounts/new"
+      render :new
     elsif params[:discount_percent].to_i > 100 || params[:discount_percent].to_i < 1
       flash[:notice] = "discount must be between 1-100%"
-      redirect_to "/merchants/#{@merchant.id}/bulk_discounts/new"
+      render :new
     else
       discount.save
       redirect_to "/merchants/#{@merchant.id}/bulk_discounts"
@@ -32,6 +32,25 @@ class MerchantBulkDiscountsController < ApplicationController
     discount = BulkDiscount.find(params[:discount_id])
     discount.destroy
     redirect_to "/merchants/#{merchant.id}/bulk_discounts"
+  end
+
+  def edit
+    @discount = BulkDiscount.find(params[:discount_id])
+  end
+
+  def update
+    @discount = BulkDiscount.find(params[:discount_id])
+
+    if params[:quantity_threshold].empty? || params[:discount_percent].empty?
+      flash[:notice] = "fields can not be empty"
+      render :edit
+    elsif params[:discount_percent].to_i > 100 || params[:discount_percent].to_i < 1
+      flash[:notice] = "discount must be between 1-100%"
+      render :edit
+    else
+      @discount.update(discount_params)
+      redirect_to "/merchants/#{@discount.merchant_id}/bulk_discounts/#{@discount.id}"
+    end
   end
 
   private
