@@ -10,6 +10,8 @@ RSpec.describe 'Admin Invoice Index' do
       invoice_3 = customer.invoices.create(status: "in progress")
 
       visit "/admin/invoices"
+
+      expect(page).to have_content('Billy Jonson', count: 1)
       expect(page).to have_link("#{invoice_1.id}")
       expect(page).to have_link("#{invoice_2.id}")
       expect(page).to have_link("#{invoice_3.id}")
