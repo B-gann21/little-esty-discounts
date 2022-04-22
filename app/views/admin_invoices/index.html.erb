@@ -1,7 +1,13 @@
 <h1>Admin Invoice Index Page</h1>
 
+<h3>All invoices:</h3>
 
-<% @invoices.each do |invoice| %>
-  Customer Name: <%= invoice.customer.first_name %> <%= invoice.customer.last_name %><br>
-  Invoice Number: <%= link_to "#{invoice.id}", "/admin/invoices/#{invoice.id}" %><br>
+<% @customers.each do |customer| %>
+  <h4>Customer Name: <%= customer.first_name %> <%= customer.last_name %></h4>
+  <h5>Invoices:</h5>
+  <% customer.invoices.each do |invoice| %>
+    <ul>
+      <li><%= link_to "#{invoice.id}", "/admin/invoices/#{invoice.id}" %></li>
+    </ul>
+  <% end %>
 <% end %>
