@@ -57,7 +57,6 @@ RSpec.describe Invoice do
     end
 
     it '.incomplete_invoices can return invoices with items that have not shipped' do
-      expect(Invoice.incomplete_invoices).to be_a(Array)
       expect(Invoice.incomplete_invoices).to eq([@invoice, @invoice_2])
       expect(Invoice.incomplete_invoices.count).to eq(2)
 

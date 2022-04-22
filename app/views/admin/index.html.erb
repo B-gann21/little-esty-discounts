@@ -7,22 +7,11 @@
 <h2>Incomplete Invoices:</h2>
 
 <div id="incomplete_invoices">
-  <% @incomplete_invoices.each do |invoice_item| %>
-      <p><%= link_to "#{invoice_item.invoice_id}", "admin/invoices/#{invoice_item.invoice_id}" %>
-        Created at: <%= invoice_item.invoice.created_at.strftime("%A, %B %d, %Y") %>
+  <% @incomplete_invoices.each do |invoice| %>
+      <p><%= link_to "#{invoice.id}", "admin/invoices/#{invoice.id}" %>
+        Created at: <%= invoice.created_at.strftime("%A, %B %d, %Y") %>
       </p>
    <% end %>
 </div>
 
 <br>
-
-<div id="statistics">
-  <h3>Top 5 Customers: </h3>
-  <% if @merchant != nil %>
-    <% @merchant.top_five_customers.each do |customer| %>
-      <div id="customer-<%= customer.id %>">
-        <h4>Name: <%= customer.first_name %> <%= customer.last_name %></h4>
-        <p>Successful Transactions: <%= customer.successful_transactions.count %></p>
-      </div>
-    <% end %>
-  <% end %>

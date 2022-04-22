@@ -1,6 +1,5 @@
 class AdminController < ApplicationController
   def index
-    @incomplete_invoices = InvoiceItem.incomplete_invoices
-    @merchant = Merchant.first
+    @incomplete_invoices = Invoice.incomplete_invoices
   end
 end

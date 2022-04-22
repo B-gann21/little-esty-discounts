@@ -96,6 +96,7 @@ RSpec.describe 'Admin Dashboard' do
       invoice_5 = customer_1.invoices.create!(status: 'completed')
       item_1.invoice_items.create!(invoice_id: invoice_1.id, quantity: 3, unit_price: 400, status: 'packaged')
       item_2.invoice_items.create!(invoice_id: invoice_1.id, quantity: 5, unit_price: 400, status: 'pending')
+      item_2.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 400, status: 'pending')
       item_3.invoice_items.create!(invoice_id: invoice_3.id, quantity: 5, unit_price: 400, status: 'packaged')
       item_4.invoice_items.create!(invoice_id: invoice_4.id, quantity: 5, unit_price: 400, status: 'packaged')
       item_5.invoice_items.create!(invoice_id: invoice_5.id, quantity: 5, unit_price: 400, status: 'shipped')
@@ -147,38 +148,6 @@ RSpec.describe 'Admin Dashboard' do
         expect(invoice_4_date).to appear_before(invoice_3_date)
         expect(invoice_3_date).to appear_before(invoice_1_date)
         expect(page).to_not have_content(invoice_5_date)
-      end
-    end
-
-    it 'I see the names of the top 5 customers who have the most successful transactions and displays the number of successful transactions they have conducted' do
-      within '#statistics' do
-        expect("Joey Ondricka").to appear_before("Osinski Cecelia")
-        expect("Osinski Cecelia").to appear_before("Toy Mariah")
-        expect("Toy Mariah").to appear_before("Joy Braun")
-        expect("Joy Braun").to appear_before("Mark Brains")
-        expect("Mark Brains").to_not appear_before("Joy Braun")
-      end
-    end
-
-    it 'displays the number of successful transactions next to each customer' do
-      within "#customer-#{@customer_1.id}" do
-        expect(page).to have_content('Successful Transactions: 6')
-      end
-
-      within "#customer-#{@customer_2.id}" do
-        expect(page).to have_content('Successful Transactions: 5')
-      end
-
-      within "#customer-#{@customer_3.id}" do
-        expect(page).to have_content('Successful Transactions: 4')
-      end
-
-      within "#customer-#{@customer_4.id}" do
-        expect(page).to have_content('Successful Transactions: 3')
-      end
-
-      within "#customer-#{@customer_5.id}" do
-        expect(page).to have_content('Successful Transactions: 2')
       end
     end
   end
