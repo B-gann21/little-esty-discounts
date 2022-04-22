@@ -27,6 +27,13 @@ class MerchantBulkDiscountsController < ApplicationController
     end
   end
 
+  def destroy
+    merchant = Merchant.find(params[:id])
+    discount = BulkDiscount.find(params[:discount_id])
+    discount.destroy
+    redirect_to "/merchants/#{merchant.id}/bulk_discounts"
+  end
+
   private
 
   def discount_params
