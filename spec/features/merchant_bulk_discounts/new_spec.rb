@@ -13,7 +13,7 @@ RSpec.describe 'new discount form' do
 
   it 'can create a new discount' do
     expect(page).to_not have_content('Quantity threshold: 25')
-    expect(page).to_not have_content('Discount percent: 50')
+    expect(page).to_not have_content('Discount percentage: 50')
     click_link 'New Discount'
 
     fill_in :quantity_threshold, with: 25
@@ -22,7 +22,7 @@ RSpec.describe 'new discount form' do
 
     expect(current_path).to eq("/merchants/#{@merchant_1.id}/bulk_discounts")
     expect(page).to have_content('Quantity threshold: 25')
-    expect(page).to have_content('Discount percent: 50')
+    expect(page).to have_content('Discount percentage: 50')
   end
 
   context 'takes valid data only' do
@@ -40,10 +40,11 @@ RSpec.describe 'new discount form' do
       click_link 'New Discount'
 
       fill_in :discount_percent, with: 101
+      fill_in :quantity_threshold, with: 50
       click_button 'Submit'
-
+      
       expect(current_path).to eq("/merchants/#{@merchant_1.id}/bulk_discounts/new")
-      expect(page).to have_content("Notice: discount can not be over 100%")
+      expect(page).to have_content("Notice: discount must be between 1-100%")
     end
   end
 end

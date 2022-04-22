@@ -1,0 +1,11 @@
+<h1>Create a new merchant</h1>
+
+<%= form_with url: "/merchants/#{@merchant.id}/bulk_discounts", local: true do |form| %>
+  <%= form.label :quantity_threshold %>
+  <%= form.number_field :quantity_threshold %>
+
+  <%= form.label :discount_percent %>
+  <%= form.number_field :discount_percent %>
+
+  <%= form.submit 'Submit' %>
+<% end %>
