@@ -13,10 +13,4 @@ class InvoiceItem < ApplicationRecord
   def self.items_total_revenue
     sum('quantity * unit_price')
   end
-
-  def self.incomplete_invoices
-    InvoiceItem.joins(:invoice)
-               .where.not(status: 'shipped')
-               .order("invoices.created_at")
-  end
 end
