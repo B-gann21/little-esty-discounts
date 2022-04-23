@@ -85,7 +85,7 @@ RSpec.describe Invoice do
       @merchant.bulk_discounts.create!(quantity_threshold: 2, discount_percent: 8)
       @invoice_item_2 = @invoice_2.invoice_items.create!(item_id: @item_3.id, quantity: 3, unit_price: 400, status: 2)
     end
-
+    #the instructors have told me to work on sad path testing - are these next few tests demonstrating that?
     it '.orders_that_can_be_discounted returns invoice_items that can qualify for a discount' do
       expect(@invoice_1.orders_that_can_be_discounted).to eq([@invoice_item_1a, @invoice_item_1b, @invoice_item_1c])
       expect(@invoice_1.orders_that_can_be_discounted).to_not include([@invoice_item_1d, @invoice_item_2])
@@ -107,6 +107,11 @@ RSpec.describe Invoice do
 
       expect(invoice_item_1c.best_deal).to eq(8)
       expect(invoice_item_1c.best_deal).to_not eq(10)
+    end
+
+    it '.total_discounted_revenue returns total revenue minus applied discounts' do
+      expect(@invoice_1.discounted_revenue).to eq(6810)
+      expect(@invoice_1.discounted_revenue).to_not eq(7300) # total revenue of invoice_1
     end
   end
 end
