@@ -12,6 +12,7 @@ RSpec.describe 'merchant invoice show page' do
 
     @customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
     @invoice_1 = @customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+    @invoice_2 = @customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
     @invoice_1.invoice_items.create!(item_id: @item_1.id, status: "shipped", quantity: 8, unit_price: 100)
     @invoice_1.invoice_items.create!(item_id: @item_2.id, status: "packaged", quantity: 5, unit_price: 500)
 
@@ -25,6 +26,7 @@ RSpec.describe 'merchant invoice show page' do
     expect(page).to have_content("Billy")
     expect(page).to have_content("Jonson")
   end
+
 
   context 'invoice items' do
     it 'should show the names of all items related to the invoice' do
@@ -48,10 +50,22 @@ RSpec.describe 'merchant invoice show page' do
     end
 
     it "displays the total revenue for all items on the invoice" do
-      @item_1.invoice_items.create!(invoice_id: @invoice_1.id, quantity: 3, unit_price: 4, status: 2)
-      @item_2.invoice_items.create!(invoice_id: @invoice_1.id, quantity: 3, unit_price: 4, status: 2)
-      @item_3.invoice_items.create!(invoice_id: @invoice_1.id, quantity: 3, unit_price: 4, status: 2)
       expect(page).to have_content("Total Revenue: $33.00")
+    end
+
+    it 'displays the discounted revenue next to the total revenue' do
+      @merchant.bulk_discounts.create!(quantity_threshold: 3, discount_percent: 10)
+      @item_1.invoice_items.create!(invoice_id: @invoice_2.id, quantity: 3, unit_price: 400, status: 2)
+      @item_2.invoice_items.create!(invoice_id: @invoice_2.id, quantity: 3, unit_price: 400, status: 2)
+      @item_3.invoice_items.create!(invoice_id: @invoice_2.id, quantity: 3, unit_price: 400, status: 2)
+
+      within '#revenue' do
+        expect(page).to have_content("Total Revenue: $33.00")
+        expect(page).to_not have_content("Total Revenue: $36.00") #total revenue for invoice_2
+        expect(page).to_not have_content("Total Revenue: $69.00") #total revenue for invoice_1 + invoice_1
+        expect(page).to_not have_content("Total Revenue: $29.70")
+        expect(page).to have_content("Discounted Revenue: $29.70")
+      end
     end
 
     it 'displays a select box to change an invoice_item status' do
