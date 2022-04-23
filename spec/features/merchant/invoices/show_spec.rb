@@ -62,7 +62,7 @@ RSpec.describe 'merchant invoice show page' do
       within '#revenue' do
         expect(page).to have_content("Total Revenue: $33.00")
         expect(page).to_not have_content("Total Revenue: $36.00") #total revenue for invoice_2
-        expect(page).to_not have_content("Total Revenue: $69.00") #total revenue for invoice_1 + invoice_1
+        expect(page).to_not have_content("Total Revenue: $69.00") #total revenue for invoice_1 + invoice_2
         expect(page).to_not have_content("Total Revenue: $29.70")
         expect(page).to have_content("Discounted Revenue: $29.70")
       end

@@ -31,7 +31,9 @@ RSpec.describe Invoice do
   context 'relationships' do
     it { should belong_to :customer }
     it { should have_many :transactions }
-    it { should have_many(:items).through(:invoice_items)}
+    it { should have_many(:items).through(:invoice_items) }
+    it { should have_many(:merchants).through(:items) }
+    it { should have_many(:bulk_discounts).through(:merchants) }
   end
 
   context 'instance methods' do
@@ -54,6 +56,31 @@ RSpec.describe Invoice do
       item_2.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 4, status: 2)
       item_3.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 4, status: 2)
       expect(invoice.total_revenue).to eq(36)
+    end
+
+    it '.discounted_revenue' do
+      merchant = Merchant.create!(name: 'Brylan')
+      merchant_2 = Merchant.create!(name: 'Chris')
+
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 500, description: 'Soda')
+      item_3 = merchant_2.items.create!(name: 'Jar', unit_price: 400, description: 'Jelly')
+
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice_1 = customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      invoice_2 = customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      invoice_1.invoice_items.create!(item_id: item_1.id, status: "shipped", quantity: 8, unit_price: 100)
+      invoice_1.invoice_items.create!(item_id: item_2.id, status: "packaged", quantity: 5, unit_price: 500)
+
+      merchant.bulk_discounts.create!(quantity_threshold: 3, discount_percent: 10)
+      item_1.invoice_items.create!(invoice_id: invoice_2.id, quantity: 3, unit_price: 400, status: 2)
+      item_2.invoice_items.create!(invoice_id: invoice_2.id, quantity: 3, unit_price: 400, status: 2)
+      item_3.invoice_items.create!(invoice_id: invoice_2.id, quantity: 3, unit_price: 400, status: 2)
+
+      expect(invoice_1.discounted_revenue).to eq(2970)
+      expect(invoice_1.discounted_revenue).to_not eq(3300) #total revenue of invoice_1 without discount
+      expect(invoice_1.discounted_revenue).to_not eq(3600) #total revenue of invoice_2
+      expect(invoice_1.discounted_revenue).to_not eq(6900) #total revenue of invoice_2 + invoice_1
     end
 
     it '.incomplete_invoices can return invoices with items that have not shipped' do
