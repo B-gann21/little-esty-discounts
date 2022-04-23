@@ -18,6 +18,14 @@ class Invoice < ApplicationRecord
     invoice_items.sum("unit_price * quantity")
   end
 
+  def orders_that_can_be_discounted # should I be testing the best_deal method that is created in the select statement?
+    invoice_items.joins(item: {merchant: :bulk_discounts})
+                 .select("invoice_items.*, max(bulk_discounts.discount_percent) as best_deal")
+                 .where("invoice_items.quantity >= bulk_discounts.quantity_threshold")
+                 .group(:id)
+                 .compact
+  end
+
   def self.incomplete_invoices
     joins(:invoice_items)
     .where.not(invoice_items: {status: 2})
