@@ -93,6 +93,11 @@ RSpec.describe Invoice do
       expect(@invoice_2.orders_that_can_be_discounted).to be_empty
     end
 
+    it '.orders_that_can_be_discounted returns invoice_items that can qualify for a discount' do
+      expect(@invoice_1.orders_that_can_be_discounted).to eq([@invoice_item_1a, @invoice_item_1b, @invoice_item_1c])
+      expect(@invoice_1.orders_that_can_be_discounted).to_not include([@invoice_item_1d, @invoice_item_2a, @invoice_item_2b, @invoice_item_2c])
+    end
+
     it 'invoice_items in .orders_that_can_be_discounted are matched with the highest discount_percent' do
       qualified_orders_1 = @invoice_1.orders_that_can_be_discounted
       invoice_item_1a = qualified_orders_1[0]
@@ -110,8 +115,8 @@ RSpec.describe Invoice do
     end
 
     it '.total_discounted_revenue returns total revenue minus applied discounts' do
-      expect(@invoice_1.discounted_revenue).to eq(6810)
-      expect(@invoice_1.discounted_revenue).to_not eq(7300) # total revenue of invoice_1
+      expect(@invoice_1.total_discounted_revenue).to eq(6810)
+      expect(@invoice_1.total_discounted_revenue).to_not eq(7300) # total revenue of invoice_1
     end
   end
 end
