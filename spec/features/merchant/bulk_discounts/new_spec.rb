@@ -2,11 +2,11 @@ require 'rails_helper'
 RSpec.describe 'new discount form' do
   before :each do
     @merchant_1 = Merchant.create!(name: 'Brylan')
-    @discount_1 = @merchant_1.bulk_discounts.create!(quantity_threshold: 10, discount_percent: 25)
-    @discount_1a = @merchant_1.bulk_discounts.create!(quantity_threshold: 15, discount_percent: 30)
+    @discount_1 = @merchant_1.bulk_discounts.create!(name: "buy 10 get 25% off", quantity_threshold: 10, discount_percent: 25)
+    @discount_1a = @merchant_1.bulk_discounts.create!(name: "buy 15 get 30% off", quantity_threshold: 15, discount_percent: 30)
 
     @merchant_2 = Merchant.create!(name: 'Jeffrey')
-    @discount_2 = @merchant_2.bulk_discounts.create!(quantity_threshold: 20, discount_percent: 5)
+    @discount_2 = @merchant_2.bulk_discounts.create!(name: "buy 20 get 5% off", quantity_threshold: 20, discount_percent: 5)
 
     visit "/merchants/#{@merchant_1.id}/bulk_discounts"
   end
@@ -16,6 +16,7 @@ RSpec.describe 'new discount form' do
     expect(page).to_not have_content('Discount percentage: 50')
     click_link 'New Discount'
 
+    fill_in :name, with: 'name'
     fill_in :quantity_threshold, with: 25
     fill_in :discount_percent, with: 50
     click_button 'Submit'
@@ -41,6 +42,7 @@ RSpec.describe 'new discount form' do
     it 'discount percent can not be over 100' do
       click_link 'New Discount'
 
+      fill_in :name, with: 'name'
       fill_in :discount_percent, with: 101
       fill_in :quantity_threshold, with: 50
       click_button 'Submit'

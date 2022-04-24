@@ -87,18 +87,13 @@ RSpec.describe Invoice do
     end
 
     it '.orders_that_can_be_discounted returns invoice_items that can qualify for a discount' do
-      expect(@invoice_1.orders_that_can_be_discounted).to eq([@invoice_item_1a, @invoice_item_1b, @invoice_item_1c])
+      expect(@invoice_1.orders_that_can_be_discounted.sort).to eq([@invoice_item_1a, @invoice_item_1b, @invoice_item_1c].sort)
       expect(@invoice_1.orders_that_can_be_discounted).to_not include([@invoice_item_1d, @invoice_item_2])
       expect(@invoice_2.orders_that_can_be_discounted).to eq([])
     end
 
-    it '.orders_that_can_be_discounted returns invoice_items that can qualify for a discount' do
-      expect(@invoice_1.orders_that_can_be_discounted).to eq([@invoice_item_1a, @invoice_item_1b, @invoice_item_1c])
-      expect(@invoice_1.orders_that_can_be_discounted).to_not include([@invoice_item_1d, @invoice_item_2a, @invoice_item_2b, @invoice_item_2c])
-    end
-
     it 'invoice_items in .orders_that_can_be_discounted are matched with the highest discount_percent' do
-      qualified_orders_1 = @invoice_1.orders_that_can_be_discounted
+      qualified_orders_1 = @invoice_1.orders_that_can_be_discounted.sort
       invoice_item_1a = qualified_orders_1[0]
       invoice_item_1b = qualified_orders_1[1]
       invoice_item_1c = qualified_orders_1[2]
