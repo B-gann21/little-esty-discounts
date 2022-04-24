@@ -27,9 +27,9 @@ RSpec.describe 'Admin Invoice Show page' do
     visit "/admin/invoices/#{invoice_1.id}"
 
     expect(page).to have_content("Item Name: Bottle")
-    expect(page).to have_content("Item Quantity: 9")
-    expect(page).to have_content("Item Price: 10")
-    expect(page).to have_content("Invoice Item Status: packaged")
+    expect(page).to have_content("Quantity: 9")
+    expect(page).to have_content("Price: 10")
+    expect(page).to have_content("Status: packaged")
   end
 
   describe 'invoice information' do
@@ -94,14 +94,14 @@ RSpec.describe 'Admin Invoice Show page' do
       invoice_item_2c = item_2a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 400, status: 2) # 800 b/c no discounts
 
       visit "/admin/invoices/#{invoice_1.id}"
-      expect(page).to have_content('Discounted revenue: $67.00') # true discounted revenue of invoice_1
-      expect(page).to_not have_content('Discounted revenue: $80.00') # total revenue of invoice_1
-      expect(page).to_not have_content('Discounted revenue: $64.00') # would show if discount_1a was mistakenly applied to invoice_item_1c
+      expect(page).to have_content('Discounted Revenue: $67.00') # true discounted revenue of invoice_1
+      expect(page).to_not have_content('Discounted Revenue: $80.00') # total revenue of invoice_1
+      expect(page).to_not have_content('Discounted Revenue: $64.00') # would show if discount_1a was mistakenly applied to invoice_item_1c
       # edge case/sad path: an invoice that doesn't have applied discounts should not have a discounted_revenue section
       visit "/admin/invoices/#{invoice_2.id}"
-      expect(page).to have_content('Total revenue: $40.00') # total revenue of invoice_2
-      expect(page).to_not have_content('Discounted revenue: $40.00') # total revenue of invoice_2
-      expect(page).to_not have_content('Discounted revenue: $37.00') # would show if discount_1a was mistakenly applied to invoice_item_2c
+      expect(page).to have_content('Total Revenue: $40.00') # total revenue of invoice_2
+      expect(page).to_not have_content('Discounted Revenue: $40.00') # total revenue of invoice_2
+      expect(page).to_not have_content('Discounted Revenue: $37.00') # would show if discount_1a was mistakenly applied to invoice_item_2c
     end
   end
 end
