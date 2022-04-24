@@ -70,15 +70,38 @@ RSpec.describe 'merchant invoice show page' do
     end
 
     it 'if qualified for discount, an item has a link to its discount show page' do
-      discount = @merchant.bulk_discounts.create!(quantity_threshold: 8, discount_percent: 10)
+      merchant = Merchant.create!(name: 'Brylan')
+      discount_1 = merchant.bulk_discounts.create!(name: "buy 10 items, get 15% off", quantity_threshold: 10, discount_percent: 15)
+      discount_1a = merchant.bulk_discounts.create!(name: "Buy 5 items, get 10% off", quantity_threshold: 5, discount_percent: 10)
+      discount_1b = merchant.bulk_discounts.create!(name: "Buy 2 items, get 8% off", quantity_threshold: 2, discount_percent: 8)
 
-      within "#item-#{@item_1.id}" do
-        click_link "Discount ##{discount.id}"
-        expect(current_path).to_eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}")
+      merchant_2 = Merchant.create!(name: 'Chris')
+
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 500, description: 'Soda')
+      item_3 = merchant_2.items.create!(name: 'Jar', unit_price: 400, description: 'Jelly')
+
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice_1 = customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      invoice_2 = customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      invoice_item_1a = invoice_1.invoice_items.create!(item_id: item_1.id, status: "shipped", quantity: 8, unit_price: 100)
+      invoice_item_1b = invoice_1.invoice_items.create!(item_id: item_2.id, status: "packaged", quantity: 10, unit_price: 500)
+      invoice_item_1d = invoice_1.invoice_items.create!(item_id: item_3.id, status: "packaged", quantity: 4, unit_price: 500)
+
+      invoice_item_2 = invoice_2.invoice_items.create!(item_id: item_3.id, quantity: 3, unit_price: 400, status: 2)
+
+      visit "/merchants/#{merchant.id}/invoices/#{invoice_1.id}"
+
+      within "#item-#{item_1.id}" do
+        click_link "#{discount_1a.name}"
+        expect(current_path).to eq("/merchants/#{merchant.id}/bulk_discounts/#{discount_1a.id}")
       end
 
-      within "#item-#{@item_2.id}" do
-        expect(page).to_not have_link("Discount ##{discount.id}")
+      visit "/merchants/#{merchant.id}/invoices/#{invoice_1.id}"
+
+      within "#item-#{item_2.id}" do
+        expect(page).to_not have_link("#{discount_1a.name}")
+        expect(page).to have_link("#{discount_1.name}")
       end
     end
 
@@ -98,12 +121,11 @@ RSpec.describe 'merchant invoice show page' do
       invoice_item_1c = invoice_1.invoice_items.create!(item_id: item_2.id, status: "packaged", quantity: 4, unit_price: 500)
       invoice_item_1d = invoice_1.invoice_items.create!(item_id: item_3.id, status: "packaged", quantity: 4, unit_price: 500)
 
-      merchant.bulk_discounts.create!(quantity_threshold: 5, discount_percent: 10)
-      merchant.bulk_discounts.create!(quantity_threshold: 2, discount_percent: 8)
+      merchant.bulk_discounts.create!(name: "Buy 5 items, get 10% off", quantity_threshold: 5, discount_percent: 10)
+      merchant.bulk_discounts.create!(name: "buy 2 items, get 8 % off", quantity_threshold: 2, discount_percent: 8)
       invoice_item_2 = invoice_2.invoice_items.create!(item_id: item_3.id, quantity: 3, unit_price: 400, status: 2)
 
       visit "/merchants/#{merchant.id}/invoices/#{invoice_1.id}"
-
       within '#revenue' do
         expect(page).to have_content("Total Revenue: $73.00")
         expect(page).to_not have_content("Total Revenue: $12.00") #total revenue for invoice_2

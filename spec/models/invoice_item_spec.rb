@@ -40,6 +40,8 @@ RSpec.describe InvoiceItem do
 
   context 'relationships' do
     it { should belong_to :item}
+    it { should have_one(:merchant).through(:item) }
+    it { should have_many(:bulk_discounts).through(:merchant) }
     it { should belong_to :invoice}
   end
 
@@ -60,21 +62,22 @@ RSpec.describe InvoiceItem do
       invoice_item_1c = invoice_1.invoice_items.create!(item_id: item_2.id, status: "packaged", quantity: 4, unit_price: 500)
       invoice_item_1d = invoice_1.invoice_items.create!(item_id: item_3.id, status: "packaged", quantity: 4, unit_price: 500)
 
-      discount_1 = merchant.bulk_discounts.create!(quantity_threshold: 10, discount_percent: 15)
-      discount_1a = merchant.bulk_discounts.create!(quantity_threshold: 5, discount_percent: 10)
-      discount_1b = merchant.bulk_discounts.create!(quantity_threshold: 2, discount_percent: 8)
+      discount_1 = merchant.bulk_discounts.create!(name: "buy 10 items, get 15% off", quantity_threshold: 10, discount_percent: 15)
+      discount_1a = merchant.bulk_discounts.create!(name: "Buy 5 items, get 10% off", quantity_threshold: 5, discount_percent: 10)
+      discount_1b = merchant.bulk_discounts.create!(name: "Buy 2 items, get 8% off", quantity_threshold: 2, discount_percent: 8)
 
       invoice_item_2 = invoice_2.invoice_items.create!(item_id: item_3.id, quantity: 3, unit_price: 400, status: 2)
 
       expect(invoice_item_1a.best_bulk_discount).to be_a(BulkDiscount)
       expect(invoice_item_1a.best_bulk_discount).to_not be_a(Array)
-      expect(invoice_item_1a.best_bulk_discount).to_not eq(discount_1)
-      expect(invoice_item_1a.best_bulk_discount).to_not eq(discount_1b)
-      expect(invoice_item_1a.best_bulk_discount).to eq(discount_1a)
+      expect(invoice_item_1a.best_bulk_discount.quantity_threshold).to eq(discount_1a.quantity_threshold)
+      expect(invoice_item_1a.best_bulk_discount.quantity_threshold).to_not eq(discount_1b.quantity_threshold)
+      expect(invoice_item_1a.best_bulk_discount.discount_percent).to eq(discount_1a.discount_percent)
+      expect(invoice_item_1a.best_bulk_discount.discount_percent).to_not eq(discount_1b.discount_percent)
 
-      expect(invoice_item_1b.best_bulk_discount).to eq(discount_1)
-      expect(invoice_item_1b.best_bulk_discount).to_not eq(discount_1a)
-      expect(invoice_item_1b.best_bulk_discount).to_not eq(discount_1b)
+      expect(invoice_item_1b.best_bulk_discount.quantity_threshold).to eq(discount_1.quantity_threshold)
+      expect(invoice_item_1b.best_bulk_discount.quantity_threshold).to_not eq(discount_1a.quantity_threshold)
+      expect(invoice_item_1b.best_bulk_discount.quantity_threshold).to_not eq(discount_1b.quantity_threshold)
     end
   end
 

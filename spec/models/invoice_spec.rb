@@ -81,11 +81,11 @@ RSpec.describe Invoice do
       @invoice_item_1c = @invoice_1.invoice_items.create!(item_id: @item_2.id, status: "packaged", quantity: 4, unit_price: 500)
       @invoice_item_1d = @invoice_1.invoice_items.create!(item_id: @item_3.id, status: "packaged", quantity: 4, unit_price: 500)
 
-      @merchant.bulk_discounts.create!(quantity_threshold: 5, discount_percent: 10)
-      @merchant.bulk_discounts.create!(quantity_threshold: 2, discount_percent: 8)
+      @merchant.bulk_discounts.create!(name: "Buy 5 items, get 10% off", quantity_threshold: 5, discount_percent: 10)
+      @merchant.bulk_discounts.create!(name: "Buy 2 items, get 8% off", quantity_threshold: 2, discount_percent: 8)
       @invoice_item_2 = @invoice_2.invoice_items.create!(item_id: @item_3.id, quantity: 3, unit_price: 400, status: 2)
     end
-    
+
     it '.orders_that_can_be_discounted returns invoice_items that can qualify for a discount' do
       expect(@invoice_1.orders_that_can_be_discounted).to eq([@invoice_item_1a, @invoice_item_1b, @invoice_item_1c])
       expect(@invoice_1.orders_that_can_be_discounted).to_not include([@invoice_item_1d, @invoice_item_2])

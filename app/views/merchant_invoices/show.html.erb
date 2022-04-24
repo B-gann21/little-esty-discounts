@@ -33,6 +33,7 @@
         <p>Status: <%= @invoice.get_invoice_item(item.id).status %></p>
       </li>
     </ul>
+
     <%= form_with url: "/merchants/#{item.merchant_id}/invoices/#{@invoice.id}?item_id=#{item.id}",
                method: :patch, local: true do |form| %>
       <%= form.label :select_status %>
@@ -40,9 +41,8 @@
                       ['pending', 'packaged', 'shipped'], selected: @invoice.status %>
       <%= form.submit 'Update Item Status' %>
     <% end %>
-
     <% if @invoice.get_invoice_item(item.id).best_bulk_discount %>
-      <%= link_to "Discount ##{@invoice.get_invoice_item(item.id).best_bulk_discount.id}",
+      <%= link_to "#{@invoice.get_invoice_item(item.id).best_bulk_discount.name}",
                   "/merchants/#{item.merchant_id}/bulk_discounts/#{@invoice.get_invoice_item(item.id).best_bulk_discount.id}" %>
     <% end %>
   </div>
