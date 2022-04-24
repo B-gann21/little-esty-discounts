@@ -4,6 +4,7 @@
   <div id="discount-<%= discount.id %>">
     <ul>
       <h3><%= link_to "Discount #{discount.id}", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}" %></h3>
+      <h2>Name: <%= discount.name %></h2>
       <li>Quantity threshold: <%= discount.quantity_threshold %></li>
       <li>Discount percentage: <%= discount.discount_percent %></li>
     </ul>

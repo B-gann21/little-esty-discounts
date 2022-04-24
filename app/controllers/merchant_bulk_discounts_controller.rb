@@ -15,7 +15,7 @@ class MerchantBulkDiscountsController < ApplicationController
     @merchant = Merchant.find(params[:id])
     discount = @merchant.bulk_discounts.new(discount_params)
 
-    if params[:quantity_threshold].empty? || params[:discount_percent].empty?
+    if params[:quantity_threshold].empty? || params[:discount_percent].empty? || params[:name].empty?
       flash[:notice] = "fields can not be empty"
       render :new
     elsif params[:discount_percent].to_i > 100 || params[:discount_percent].to_i < 1
@@ -41,7 +41,7 @@ class MerchantBulkDiscountsController < ApplicationController
   def update
     @discount = BulkDiscount.find(params[:discount_id])
 
-    if params[:quantity_threshold].empty? || params[:discount_percent].empty?
+    if params[:quantity_threshold].empty? || params[:discount_percent].empty? || params[:name].empty?
       flash[:notice] = "fields can not be empty"
       render :edit
     elsif params[:discount_percent].to_i > 100 || params[:discount_percent].to_i < 1
@@ -56,6 +56,6 @@ class MerchantBulkDiscountsController < ApplicationController
   private
 
   def discount_params
-    params.permit(:discount_percent, :quantity_threshold)
+    params.permit(:name, :discount_percent, :quantity_threshold)
   end
 end
