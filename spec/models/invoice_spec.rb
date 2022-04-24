@@ -81,8 +81,8 @@ RSpec.describe Invoice do
       @invoice_item_1c = @invoice_1.invoice_items.create!(item_id: @item_2.id, status: "packaged", quantity: 4, unit_price: 500)
       @invoice_item_1d = @invoice_1.invoice_items.create!(item_id: @item_3.id, status: "packaged", quantity: 4, unit_price: 500)
 
-      @merchant.bulk_discounts.create!(name: "Buy 5 items, get 10% off", quantity_threshold: 5, discount_percent: 10)
-      @merchant.bulk_discounts.create!(name: "Buy 2 items, get 8% off", quantity_threshold: 2, discount_percent: 8)
+      @discount_1 = @merchant.bulk_discounts.create!(name: "Buy 5 items, get 10% off", quantity_threshold: 5, discount_percent: 10)
+      @discount_2 = @merchant.bulk_discounts.create!(name: "Buy 2 items, get 8% off", quantity_threshold: 2, discount_percent: 8)
       @invoice_item_2 = @invoice_2.invoice_items.create!(item_id: @item_3.id, quantity: 3, unit_price: 400, status: 2)
     end
 
@@ -108,8 +108,14 @@ RSpec.describe Invoice do
       expect(invoice_item_1c.best_deal).to_not eq(10)
     end
 
+    it '.total_discounted_revenue just returns discounted_revenue if no discounts are applied' do
+      expect(@invoice_2.total_discounted_revenue).to eq(@invoice_2.total_revenue)
+      expect(@invoice_2.total_discounted_revenue).to_not eq(1104) # would appear if discount_2 was mistakenly applied to invoice_item_2
+    end
+
     it '.total_discounted_revenue returns total revenue minus applied discounts' do
       expect(@invoice_1.total_discounted_revenue).to eq(6810)
+      expect(@invoice_1.total_discounted_revenue).to_not eq(6650) # would appear if discount_2 was mistakenly applied to invoice_item_1d
       expect(@invoice_1.total_discounted_revenue).to_not eq(7300) # total revenue of invoice_1
     end
   end

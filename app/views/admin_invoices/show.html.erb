@@ -16,9 +16,15 @@ Customer Name: <%= "#{@invoice.customer.first_name} #{@invoice.customer.last_nam
 <% @invoice.invoice_items.each do |invoice_item| %>
   <h3>Item Name: <%= invoice_item.item.name %></h3>
   <ul>
-    <p><strong>Quantity:</strong> <%= invoice_item.quantity %></p><br>
-    <p><strong>Price:</strong> <%= invoice_item.item.unit_price %></p><br>
-    <p><strong>Status:</strong> <%= invoice_item.status %></p><br>
+    <li>
+      <p><strong>Quantity:</strong> <%= invoice_item.quantity %></p><br>
+    </li>
+    <li>
+      <p><strong>Price:</strong> <%= invoice_item.item.unit_price %></p><br>
+    </li>
+    <li>
+      <p><strong>Status:</strong> <%= invoice_item.status %></p><br>
+    </li>
   </ul>
 <% end %>
 
