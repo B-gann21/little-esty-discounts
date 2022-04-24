@@ -2,6 +2,10 @@
 
 <%= link_to 'Edit Discount', "/merchants/#{@discount.merchant_id}/bulk_discounts/#{@discount.id}/edit" %>
 
+<h1>
+  <strong>Name:</strong> <%= @discount.name %>
+</h1>
+
 <p>
   <strong>Quantity threshold:</strong> <%= @discount.quantity_threshold %>
 </p>
