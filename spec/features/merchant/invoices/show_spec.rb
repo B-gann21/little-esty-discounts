@@ -121,9 +121,9 @@ RSpec.describe 'merchant invoice show page' do
       invoice_item_1c = invoice_1.invoice_items.create!(item_id: item_2.id, status: "packaged", quantity: 4, unit_price: 500)
       invoice_item_1d = invoice_1.invoice_items.create!(item_id: item_3.id, status: "packaged", quantity: 4, unit_price: 500)
 
-      merchant.bulk_discounts.create!(name: "Buy 5 items, get 10% off", quantity_threshold: 5, discount_percent: 10)
-      merchant.bulk_discounts.create!(name: "buy 2 items, get 8 % off", quantity_threshold: 2, discount_percent: 8)
-      invoice_item_2 = invoice_2.invoice_items.create!(item_id: item_3.id, quantity: 3, unit_price: 400, status: 2)
+      discount_1 = merchant.bulk_discounts.create!(name: "Buy 5 items, get 10% off", quantity_threshold: 5, discount_percent: 10)
+      discount_2 = merchant.bulk_discounts.create!(name: "buy 2 items, get 8 % off", quantity_threshold: 2, discount_percent: 8)
+      invoice_item_2 = invoice_2.invoice_items.create!(item_id: item_3.id, quantity: 5, unit_price: 400, status: 2)
 
       visit "/merchants/#{merchant.id}/invoices/#{invoice_1.id}"
       within '#revenue' do
@@ -133,6 +133,12 @@ RSpec.describe 'merchant invoice show page' do
         expect(page).to_not have_content("Total Revenue: $68.10")
         expect(page).to have_content("Discounted Revenue: $68.10")
       end
+
+      # edge case/sad path: an invoice that doesn't have applied discounts should not have a discounted_revenue section
+      visit "/merchants/#{merchant_2.id}/invoices/#{invoice_2.id}"
+      expect(page).to have_content('Total Revenue: $20.00') # total revenue of invoice_2
+      expect(page).to_not have_content('Discounted Revenue: $20.00') # total revenue of invoice_2
+      expect(page).to_not have_content('Discounted Revenue: $18.00') # would show if discount_1 was mistakenly applied to invoice_item_2
     end
   end
 end
