@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe 'merchant invoice show page' do
-
   before(:each) do
     @merchant = Merchant.create!(name: 'Brylan')
     @merchant_2 = Merchant.create!(name: 'Chris')
@@ -67,6 +66,19 @@ RSpec.describe 'merchant invoice show page' do
 
       within "#item-#{@item_1.id}" do
         expect(page).to have_content("Status: packaged")
+      end
+    end
+
+    it 'if qualified for discount, an item has a link to its discount show page' do
+      discount = @merchant.bulk_discounts.create!(quantity_threshold: 8, discount_percent: 10)
+
+      within "#item-#{@item_1.id}" do
+        click_link "Discount ##{discount.id}"
+        expect(current_path).to_eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}")
+      end
+
+      within "#item-#{@item_2.id}" do
+        expect(page).to_not have_link("Discount ##{discount.id}")
       end
     end
 
