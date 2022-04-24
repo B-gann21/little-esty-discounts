@@ -73,8 +73,8 @@ RSpec.describe InvoiceItem do
       expect(invoice_item_1a.best_bulk_discount).to eq(discount_1a)
 
       expect(invoice_item_1b.best_bulk_discount).to eq(discount_1)
-      expect(invoice_item_1b.best_bulk_discount).to eq(discount_1a)
-      expect(invoice_item_1b.best_bulk_discount).to eq(discount_1b)
+      expect(invoice_item_1b.best_bulk_discount).to_not eq(discount_1a)
+      expect(invoice_item_1b.best_bulk_discount).to_not eq(discount_1b)
     end
   end
 
