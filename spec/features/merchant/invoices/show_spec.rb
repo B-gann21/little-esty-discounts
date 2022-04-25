@@ -128,17 +128,16 @@ RSpec.describe 'merchant invoice show page' do
       visit "/merchants/#{merchant.id}/invoices/#{invoice_1.id}"
       within '#revenue' do
         expect(page).to have_content("Total Revenue: $73.00")
-        expect(page).to_not have_content("Total Revenue: $12.00") #total revenue for invoice_2
-        expect(page).to_not have_content("Total Revenue: $85.00") #total revenue for invoice_1 + invoice_2
+        expect(page).to_not have_content("Total Revenue: $12.00") 
+        expect(page).to_not have_content("Total Revenue: $85.00")
         expect(page).to_not have_content("Total Revenue: $68.10")
         expect(page).to have_content("Discounted Revenue: $68.10")
       end
 
-      # edge case/sad path: an invoice that doesn't have applied discounts should not have a discounted_revenue section
       visit "/merchants/#{merchant_2.id}/invoices/#{invoice_2.id}"
-      expect(page).to have_content('Total Revenue: $20.00') # total revenue of invoice_2
-      expect(page).to_not have_content('Discounted Revenue: $20.00') # total revenue of invoice_2
-      expect(page).to_not have_content('Discounted Revenue: $18.00') # would show if discount_1 was mistakenly applied to invoice_item_2
+      expect(page).to have_content('Total Revenue: $20.00') 
+      expect(page).to_not have_content('Discounted Revenue: $20.00') 
+      expect(page).to_not have_content('Discounted Revenue: $18.00') 
     end
   end
 end

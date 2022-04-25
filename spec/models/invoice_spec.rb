@@ -110,13 +110,13 @@ RSpec.describe Invoice do
 
     it '.total_discounted_revenue just returns discounted_revenue if no discounts are applied' do
       expect(@invoice_2.total_discounted_revenue).to eq(@invoice_2.total_revenue)
-      expect(@invoice_2.total_discounted_revenue).to_not eq(1104) # would appear if discount_2 was mistakenly applied to invoice_item_2
+      expect(@invoice_2.total_discounted_revenue).to_not eq(1104)
     end
 
     it '.total_discounted_revenue returns total revenue minus applied discounts' do
       expect(@invoice_1.total_discounted_revenue).to eq(6810)
-      expect(@invoice_1.total_discounted_revenue).to_not eq(6650) # would appear if discount_2 was mistakenly applied to invoice_item_1d
-      expect(@invoice_1.total_discounted_revenue).to_not eq(7300) # total revenue of invoice_1
+      expect(@invoice_1.total_discounted_revenue).to_not eq(6650)
+      expect(@invoice_1.total_discounted_revenue).to_not eq(7300) 
     end
   end
 end

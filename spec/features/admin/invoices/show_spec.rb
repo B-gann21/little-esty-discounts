@@ -84,24 +84,24 @@ RSpec.describe 'Admin Invoice Show page' do
 
       customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
       invoice_1 = customer.invoices.create(status: "in progress")
-      invoice_item_1a = item_1a.invoice_items.create!(invoice_id: invoice_1.id, quantity: 5, unit_price: 400, status: 2) # 1700 with discount
-      invoice_item_1b = item_1b.invoice_items.create!(invoice_id: invoice_1.id, quantity: 10, unit_price: 400, status: 2) # 3000 with discount
-      invoice_item_1c = item_2a.invoice_items.create!(invoice_id: invoice_1.id, quantity: 5, unit_price: 400, status: 2) # 2000 b/c no discount, 1700 if discount_1a is applied
+      invoice_item_1a = item_1a.invoice_items.create!(invoice_id: invoice_1.id, quantity: 5, unit_price: 400, status: 2)
+      invoice_item_1b = item_1b.invoice_items.create!(invoice_id: invoice_1.id, quantity: 10, unit_price: 400, status: 2)
+      invoice_item_1c = item_2a.invoice_items.create!(invoice_id: invoice_1.id, quantity: 5, unit_price: 400, status: 2)
 
       invoice_2 = customer.invoices.create!(status: 'in progress')
-      invoice_item_2a = item_1a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 2, unit_price: 400, status: 2) # 2000 b/c no discounts, 1700 if discount_1a is applied
-      invoice_item_2b = item_1b.invoice_items.create!(invoice_id: invoice_2.id, quantity: 3, unit_price: 400, status: 2) # 1200 b/c no discounts
-      invoice_item_2c = item_2a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 400, status: 2) # 800 b/c no discounts
+      invoice_item_2a = item_1a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 2, unit_price: 400, status: 2) 
+      invoice_item_2b = item_1b.invoice_items.create!(invoice_id: invoice_2.id, quantity: 3, unit_price: 400, status: 2) 
+      invoice_item_2c = item_2a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 400, status: 2) 
 
       visit "/admin/invoices/#{invoice_1.id}"
-      expect(page).to have_content('Discounted Revenue: $67.00') # true discounted revenue of invoice_1
-      expect(page).to_not have_content('Discounted Revenue: $80.00') # total revenue of invoice_1
-      expect(page).to_not have_content('Discounted Revenue: $64.00') # would show if discount_1a was mistakenly applied to invoice_item_1c
-      # edge case/sad path: an invoice that doesn't have applied discounts should not have a discounted_revenue section
+      expect(page).to have_content('Discounted Revenue: $67.00')
+      expect(page).to_not have_content('Discounted Revenue: $80.00')
+      expect(page).to_not have_content('Discounted Revenue: $64.00')
+
       visit "/admin/invoices/#{invoice_2.id}"
-      expect(page).to have_content('Total Revenue: $40.00') # total revenue of invoice_2
-      expect(page).to_not have_content('Discounted Revenue: $40.00') # total revenue of invoice_2
-      expect(page).to_not have_content('Discounted Revenue: $37.00') # would show if discount_1a was mistakenly applied to invoice_item_2c
+      expect(page).to have_content('Total Revenue: $40.00')
+      expect(page).to_not have_content('Discounted Revenue: $40.00')
+      expect(page).to_not have_content('Discounted Revenue: $37.00')
     end
   end
 end
