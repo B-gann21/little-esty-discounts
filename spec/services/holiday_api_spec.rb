@@ -9,7 +9,20 @@ RSpec.describe HolidayService do
 
       expect(response).to be_a(Array)
       expect(response[0]).to be_a(Hash)
-      expect(keys.all?(Symbol)).to be(true) 
+      expect(keys.all?(Symbol)).to be(true)
+    end
+
+    it '.upcoming_holidays lists the upcoming US holidays from the current date' do
+      Timecop.freeze(2022, 4, 25)
+
+      service = HolidayService.new
+      holidays = service.upcoming_holidays
+
+      expect(holidays[0][:name]).to eq('Memorial Day')
+      expect(holidays[1][:name]).to eq('Juneteenth')
+      expect(holidays[2][:name]).to eq('Independence Day')
+
+      Timecop.return
     end
   end
 end
