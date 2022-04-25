@@ -77,4 +77,16 @@ RSpec.describe "A merchant's bulk discounts index page" do
       end
     end
   end
+  
+  context 'weather info' do
+    it 'has a section that displays the next 3 upcoming US holidays' do
+      visit "/merchants/#{@merchant_1.id}/bulk_discounts"
+
+      expect(page).to have_css('#next-3-holidays')
+
+      within '#next-3-holidays' do
+        expect(page).to have_css('#holiday', count: 3)
+      end
+    end
+  end
 end
