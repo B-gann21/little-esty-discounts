@@ -13,7 +13,7 @@ RSpec.describe HolidayFacade do
       Timecop.freeze(2022, 4, 25)
 
       facade = HolidayFacade.new
-      holidays = facade.upcoming_holidays
+      holidays = facade.next_3_holidays
 
       expect(holidays).to be_a(Array)
       expect(holidays.count).to eq(3)
