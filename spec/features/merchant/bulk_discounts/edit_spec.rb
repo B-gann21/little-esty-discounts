@@ -13,8 +13,11 @@ RSpec.describe 'the edit discount form' do
   end
 
   it 'starts prepopulated with the discount information' do
+    expect(page).to have_field(:name, with: 'buy 10 get 25% off')
     expect(page).to have_field(:quantity_threshold, with: '10')
     expect(page).to have_field(:discount_percent, with: '25')
+
+    expect(page).to_not have_field(:name, with: 'buy 15 get 30% off')
     expect(page).to_not have_field(:quantity_threshold, with: '15')
     expect(page).to_not have_field(:discount_percent, with: '30')
   end
