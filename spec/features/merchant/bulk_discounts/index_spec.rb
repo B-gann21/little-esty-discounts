@@ -77,4 +77,29 @@ RSpec.describe "A merchant's bulk discounts index page" do
       end
     end
   end
+
+  context 'weather info' do
+    it 'has a section that displays the next 3 upcoming US holidays' do
+      Timecop.freeze(2022, 4, 25)
+
+      visit "/merchants/#{@merchant_1.id}/bulk_discounts"
+
+      expect(page).to have_css('#next-3-holidays')
+
+      within '#next-3-holidays' do
+        expect(page).to have_css('#holiday', count: 3)
+      end
+
+      expect(page).to have_content('Name: Memorial Day')
+      expect(page).to have_content('Date: 2022-05-30')
+
+      expect(page).to have_content('Name: Juneteenth')
+      expect(page).to have_content('Date: 2022-06-20')
+
+      expect(page).to have_content('Name: Independence Day')
+      expect(page).to have_content('Date: 2022-07-04')
+
+      Timecop.return
+    end
+  end
 end
