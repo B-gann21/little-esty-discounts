@@ -26,17 +26,14 @@ RSpec.describe 'Admin Merchant Index' do
 
     describe 'top_5_merchants' do
       it 'has a top_5_merchants section' do
-        #for simplicity, this customer will be creating all of the invoices.
         customer = Customer.create!(first_name: 'Ralph', last_name: 'Jones')
 
-        #merchant_1 total revenue: $25.00
         merchant_1 = Merchant.create!(name: 'Brylan')
         item_1 = merchant_1.items.create!(name: 'Pencil', unit_price: 500, description: 'Writes things.')
         invoice_1 = customer.invoices.create!(status: 'completed')
         invoice_1.transactions.create!(credit_card_number: '898989', result: 'success')
         invoice_1.invoice_items.create!(item_id: item_1.id, unit_price: 500, quantity: 5, status: 'shipped')
 
-        #merchant_2 total revenue: $50.00
         merchant_2 = Merchant.create!(name: 'Chris')
         item_2 = merchant_2.items.create!(name: 'Marker', unit_price: 500, description: 'Writes things, but dark, and thicc.')
         invoice_2 = customer.invoices.create!(status: 'completed')
@@ -46,7 +43,6 @@ RSpec.describe 'Admin Merchant Index' do
         invoice_2.invoice_items.create!(item_id: item_2.id, unit_price: 500, quantity: 5, status: 'shipped')
         invoice_2a.invoice_items.create!(item_id: item_2.id, unit_price: 500, quantity: 5, status: 'shipped')
 
-        #merchant_3 total revenue: $75.00
         merchant_3 = Merchant.create!(name: 'Antonio')
         item_3 = merchant_3.items.create!(name: 'Marker', unit_price: 500, description: 'Writes things, but dark, and thicc.')
         invoice_3 = customer.invoices.create!(status: 'completed')
@@ -59,7 +55,6 @@ RSpec.describe 'Admin Merchant Index' do
         invoice_3a.invoice_items.create!(item_id: item_3.id, unit_price: 500, quantity: 5, status: 'shipped')
         invoice_3b.invoice_items.create!(item_id: item_3.id, unit_price: 500, quantity: 5, status: 'shipped')
 
-        #merchant_4 total revenue: $100.00
         merchant_4 = Merchant.create!(name: 'Craig')
         item_4 = merchant_4.items.create!(name: 'Marker', unit_price: 500, description: 'Writes things, but dark, and thicc.')
         invoice_4 = customer.invoices.create!(status: 'completed')
@@ -75,7 +70,6 @@ RSpec.describe 'Admin Merchant Index' do
         invoice_4b.invoice_items.create!(item_id: item_4.id, unit_price: 500, quantity: 5, status: 'shipped')
         invoice_4c.invoice_items.create!(item_id: item_4.id, unit_price: 500, quantity: 5, status: 'shipped')
 
-        #merchant_5 total revenue: $125.00
         merchant_5 = Merchant.create!(name: 'Hubert')
         item_5 = merchant_5.items.create!(name: 'Marker', unit_price: 500, description: 'Writes things, but dark, and thicc.')
         invoice_5 = customer.invoices.create!(status: 'completed')
@@ -94,7 +88,6 @@ RSpec.describe 'Admin Merchant Index' do
         invoice_5c.invoice_items.create!(item_id: item_5.id, unit_price: 500, quantity: 5, status: 'shipped')
         invoice_5d.invoice_items.create!(item_id: item_5.id, unit_price: 500, quantity: 5, status: 'shipped')
 
-        #this merchant has a failed transaction, 0 revenue
         merchant_failed = Merchant.create!(name: 'Chungus')
         item_6 = merchant_failed.items.create!(name: 'Pencil', unit_price: 500, description: 'Writes things.')
         invoice_6 = customer.invoices.create!(status: 'completed')
@@ -113,17 +106,14 @@ RSpec.describe 'Admin Merchant Index' do
       end
 
       it 'displays the total revenue generated next to each merchant name' do
-        #for simplicity, this customer will be creating all of the invoices.
         customer = Customer.create!(first_name: 'Ralph', last_name: 'Jones')
 
-        #merchant_1 total revenue: $25.00
         merchant_1 = Merchant.create!(name: 'Brylan')
         item_1 = merchant_1.items.create!(name: 'Pencil', unit_price: 500, description: 'Writes things.')
         invoice_1 = customer.invoices.create!(status: 'completed')
         invoice_1.transactions.create!(credit_card_number: '898989', result: 'success')
         invoice_1.invoice_items.create!(item_id: item_1.id, unit_price: 500, quantity: 5, status: 'shipped')
 
-        #merchant_2 total revenue: $50.00
         merchant_2 = Merchant.create!(name: 'Chris')
         item_2 = merchant_2.items.create!(name: 'Marker', unit_price: 500, description: 'Writes things, but dark, and thicc.')
         invoice_2 = customer.invoices.create!(status: 'completed')
@@ -133,7 +123,6 @@ RSpec.describe 'Admin Merchant Index' do
         invoice_2.invoice_items.create!(item_id: item_2.id, unit_price: 500, quantity: 5, status: 'shipped')
         invoice_2a.invoice_items.create!(item_id: item_2.id, unit_price: 500, quantity: 5, status: 'shipped')
 
-        #merchant_3 total revenue: $75.00
         merchant_3 = Merchant.create!(name: 'Antonio')
         item_3 = merchant_3.items.create!(name: 'Marker', unit_price: 500, description: 'Writes things, but dark, and thicc.')
         invoice_3 = customer.invoices.create!(status: 'completed')
@@ -146,7 +135,6 @@ RSpec.describe 'Admin Merchant Index' do
         invoice_3a.invoice_items.create!(item_id: item_3.id, unit_price: 500, quantity: 5, status: 'shipped')
         invoice_3b.invoice_items.create!(item_id: item_3.id, unit_price: 500, quantity: 5, status: 'shipped')
 
-        #merchant_4 total revenue: $100.00
         merchant_4 = Merchant.create!(name: 'Craig')
         item_4 = merchant_4.items.create!(name: 'Marker', unit_price: 500, description: 'Writes things, but dark, and thicc.')
         invoice_4 = customer.invoices.create!(status: 'completed')
@@ -162,7 +150,6 @@ RSpec.describe 'Admin Merchant Index' do
         invoice_4b.invoice_items.create!(item_id: item_4.id, unit_price: 500, quantity: 5, status: 'shipped')
         invoice_4c.invoice_items.create!(item_id: item_4.id, unit_price: 500, quantity: 5, status: 'shipped')
 
-        #merchant_5 total revenue: $125.00
         merchant_5 = Merchant.create!(name: 'Hubert')
         item_5 = merchant_5.items.create!(name: 'Marker', unit_price: 500, description: 'Writes things, but dark, and thicc.')
         invoice_5 = customer.invoices.create!(status: 'completed')
@@ -181,7 +168,6 @@ RSpec.describe 'Admin Merchant Index' do
         invoice_5c.invoice_items.create!(item_id: item_5.id, unit_price: 500, quantity: 5, status: 'shipped')
         invoice_5d.invoice_items.create!(item_id: item_5.id, unit_price: 500, quantity: 5, status: 'shipped')
 
-        #this merchant has a failed transaction, 0 revenue
         merchant_failed = Merchant.create!(name: 'Chungus')
         item_6 = merchant_failed.items.create!(name: 'Pencil', unit_price: 500, description: 'Writes things.')
         invoice_6 = customer.invoices.create!(status: 'completed')
