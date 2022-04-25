@@ -10,6 +10,7 @@ class Item < ApplicationRecord
 
   def ordered_invoices
     invoices.order(created_at: :asc)
+            .group(:id)
   end
 
   def date_with_most_sales
