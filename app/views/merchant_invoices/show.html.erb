@@ -19,31 +19,31 @@
 
 <h2>Items ordered:</h2>
 
-<% @invoice.items.each do |item| %>
-  <div id="item-<%= item.id %>">
-    <h4><%= item.name %></h4>
+<% @invoice.invoice_items.each do |invoice_item| %>
+  <div id="item-<%= invoice_item.item_id %>">
+    <h4><%= invoice_item.item.name %></h4>
     <ul>
       <li>
-        <p>Quantity: <%= @invoice.get_invoice_item(item.id).quantity %></p>
+        <p>Quantity: <%= invoice_item.quantity %></p>
       </li>
       <li>
-        <p>Price per Item: $<%= @invoice.get_invoice_item(item.id).unit_price.to_s.insert(-3, ".") %></p>
+        <p>Price per Item: $<%= invoice_item.unit_price.to_s.insert(-3, ".") %></p>
       </li>
       <li>
-        <p>Status: <%= @invoice.get_invoice_item(item.id).status %></p>
+        <p>Status: <%= invoice_item.status %></p>
       </li>
     </ul>
 
-    <%= form_with url: "/merchants/#{item.merchant_id}/invoices/#{@invoice.id}?item_id=#{item.id}",
+    <%= form_with url: "/merchants/#{invoice_item.item.merchant_id}/invoices/#{@invoice.id}?item_id=#{invoice_item.item_id}",
                method: :patch, local: true do |form| %>
       <%= form.label :select_status %>
       <%= form.select :select_status,
-                      ['pending', 'packaged', 'shipped'], selected: @invoice.get_invoice_item(item.id).status %>
+                      ['pending', 'packaged', 'shipped'], selected: invoice_item.status %>
       <%= form.submit 'Update Item Status' %>
     <% end %>
-    <% if @invoice.get_invoice_item(item.id).best_bulk_discount %>
-      <%= link_to "#{@invoice.get_invoice_item(item.id).best_bulk_discount.name}",
-                  "/merchants/#{item.merchant_id}/bulk_discounts/#{@invoice.get_invoice_item(item.id).best_bulk_discount.id}" %>
+    <% if invoice_item.best_bulk_discount %>
+      <%= link_to "#{invoice_item.best_bulk_discount.name}",
+                  "/merchants/#{invoice_item.item.merchant_id}/bulk_discounts/#{invoice_item.best_bulk_discount.id}" %>
     <% end %>
   </div>
 <% end %>
