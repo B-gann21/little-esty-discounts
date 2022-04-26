@@ -9,17 +9,28 @@ RSpec.describe HolidayFacade do
       expect(service).to be_a(HolidayService)
     end
 
-    it '.holidays creates POROs for each holiday' do
+    it '.create_holidays creates POROs for each holiday' do
       Timecop.freeze(2020, 1, 2)
 
       facade = HolidayFacade.new
-      holidays = facade.holidays
+      holidays = facade.create_holidays
 
       expect(holidays).to be_a(Array)
       expect(holidays.count).to eq(12)
       expect(holidays).to be_all(Holiday)
       expect(holidays.any?(Hash)).to be(false)
 
+      Timecop.return
+    end
+
+    it '.all_dates returns an array of all the dates' do
+      Timecop.freeze(2020, 1, 2)
+      facade = HolidayFacade.new
+      dates = facade.all_dates
+
+      expect(dates).to be_a(Array)
+      expect(dates.length).to eq(12)
+      expect(dates).to be_all(String)
       Timecop.return
     end
 
