@@ -4,7 +4,7 @@ class HolidayService
     JSON.parse(response.body, symbolize_names: true)
   end
 
-  def upcoming_holidays
-    get_url('https://date.nager.at/api/v2/NextPublicHolidays/US')
+  def all_holidays(year)
+    get_url("https://date.nager.at/api/v3/PublicHolidays/#{year}/US")
   end
 end
