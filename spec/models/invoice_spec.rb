@@ -64,6 +64,14 @@ RSpec.describe Invoice do
       expect(@invoice_3.get_items_from_merchant(@merchant_2.id)).to be_empty
     end
 
+    it '.revenue_for(merchant_id) returns the revenue made by a given merchant' do
+      expect(@invoice.revenue_for(@merchant.id)).to eq(3300)
+      expect(@invoice.revenue_for(@merchant_2.id)).to eq(2000)
+
+      expect(@invoice.revenue_for(@merchant.id)).to_not eq(5300)
+      expect(@invoice.revenue_for(@merchant_2.id)).to_not eq(3300)
+    end
+
     it '.total_revenue returns the sum of all item costs' do
       merchant = Merchant.create!(name: 'Brylan')
       item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
