@@ -10,8 +10,9 @@ class HolidayFacade
   end
 
   def next_3_holidays
-    upcoming_holidays = create_holidays.find_all { |holiday| holiday.date > Date.today.to_s }
-    upcoming_holidays.take(3)
+    upcoming_holidays = @holidays.find_all { |holiday| holiday.date > Date.today.to_s }
+    upcoming_holidays << @holidays[0..2] if upcoming_holidays.count < 3
+    upcoming_holidays.flatten.take(3)
   end
 
   def service
