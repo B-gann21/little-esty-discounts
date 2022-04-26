@@ -5,22 +5,22 @@ RSpec.describe HolidayService do
     it '.get_url(url) grabs an array of hashes with symbols as keys' do
       service = HolidayService.new
       response = service.get_url('https://date.nager.at/api/v2/NextPublicHolidays/US')
-      keys = response.map { |holiday| holiday.keys }.flatten
 
       expect(response).to be_a(Array)
-      expect(response[0]).to be_a(Hash)
-      expect(keys.all?(Symbol)).to be(true)
+      expect(response).to be_all(Hash)
     end
 
-    it '.upcoming_holidays lists the upcoming US holidays from the current date' do
-      Timecop.freeze(2022, 4, 25)
+    it '.all_holidays returns all holidays for the current year' do
+      Timecop.freeze(2020, 1, 20)
 
       service = HolidayService.new
-      holidays = service.upcoming_holidays
+      holidays = service.all_holidays
 
-      expect(holidays[0][:name]).to eq('Memorial Day')
-      expect(holidays[1][:name]).to eq('Juneteenth')
-      expect(holidays[2][:name]).to eq('Independence Day')
+      expect(holidays.count).to eq(12)
+      expect(holidays).to be_all(Hash)
+      expect(holidays[0][:name]).to eq("New Year's Day")
+      expect(holidays[1][:name]).to eq('Martin Luther King Jr. Day')
+      expect(holidays[2][:name]).to eq("President's Day")
 
       Timecop.return
     end

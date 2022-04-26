@@ -10,15 +10,19 @@ RSpec.describe HolidayFacade do
     end
 
     it '.next_3_holidays returns 3 holiday POROs of the upcoming 3 holidays' do
-      Timecop.freeze(2022, 4, 25)
+      Timecop.freeze(2020, 1, 22)
 
       facade = HolidayFacade.new
       holidays = facade.next_3_holidays
 
       expect(holidays).to be_a(Array)
       expect(holidays.count).to eq(3)
-      expect(holidays.all?(Holiday)).to be(true)
+      expect(holidays).to be_all(Holiday)
       expect(holidays.any?(Hash)).to be(false)
+
+      expect(holidays[0].name).to eq('Martin Luther King Jr. Day')
+      expect(holidays[1].name).to eq("President's day")
+      expect(holidays[2].name).to eq("Good Friday")
 
       Timecop.return
     end
