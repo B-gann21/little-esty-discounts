@@ -11,16 +11,17 @@ RSpec.describe HolidayService do
     end
 
     it '.all_holidays returns all holidays for the current year' do
-      Timecop.freeze(2020, 1, 20)
+      Timecop.freeze(2020, 1, 2)
 
       service = HolidayService.new
-      holidays = service.all_holidays
+
+      holidays = service.all_holidays(Date.today.year)
 
       expect(holidays.count).to eq(12)
       expect(holidays).to be_all(Hash)
       expect(holidays[0][:name]).to eq("New Year's Day")
-      expect(holidays[1][:name]).to eq('Martin Luther King Jr. Day')
-      expect(holidays[2][:name]).to eq("President's Day")
+      expect(holidays[1][:name]).to eq("Martin Luther King, Jr. Day")
+      expect(holidays[2][:localName]).to eq("Presidents Day")
 
       Timecop.return
     end
