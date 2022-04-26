@@ -20,6 +20,9 @@ RSpec.describe Invoice do
       @item_1 = @merchant.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
       @item_2 = @merchant.items.create!(name: 'Can', unit_price: 500, description: 'Soda')
 
+      @merchant_2 = Merchant.create!(name: 'Jilly Bonson')
+      @item_3 = @merchant_2.items.create!(name: 'Juice Box', unit_price: 300, description: 'Apple Juice')
+
       @customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
       @invoice = @customer.invoices.create!(status: "in progress")
       @invoice_2 = @customer.invoices.create!(status: "in progress")
@@ -27,6 +30,7 @@ RSpec.describe Invoice do
 
       @invoice_item_1 = @invoice.invoice_items.create!(item_id: @item_1.id, quantity: 8, unit_price: 100, status: 'shipped')
       @invoice_item_1a = @invoice.invoice_items.create!(item_id: @item_2.id, quantity: 5, unit_price: 500, status: 'packaged')
+      @invoice_item_1b = @invoice.invoice_items.create!(item_id: @item_3.id, quantity: 5, unit_price: 500, status: 'packaged')
       @invoice_item_2 = @invoice_2.invoice_items.create!(item_id: @item_2.id, quantity: 5, unit_price: 500, status: 'packaged')
       @invoice_item_3 = @invoice_3.invoice_items.create!(item_id: @item_2.id, quantity: 5, unit_price: 500, status: 'shipped')
     end
@@ -48,6 +52,16 @@ RSpec.describe Invoice do
       expect(Invoice.incomplete_invoices.count).to eq(2)
 
       expect(Invoice.incomplete_invoices).to_not include(@invoice_3)
+    end
+
+    it '.get_items_from_merchant(merchant_id) returns all invoice items with the given merchant_id' do
+      expect(@invoice.get_items_from_merchant(@merchant.id)).to include(@invoice_item_1, @invoice_item_1a)
+      expect(@invoice.get_items_from_merchant(@merchant_2.id)).to include(@invoice_item_1b)
+
+      expect(@invoice.get_items_from_merchant(@merchant.id)).to_not include(@invoice_item_1b)
+      expect(@invoice.get_items_from_merchant(@merchant_2.id)).to_not include(@invoice_item_1, @invoice_item_1a)
+      expect(@invoice_2.get_items_from_merchant(@merchant_2.id)).to be_empty
+      expect(@invoice_3.get_items_from_merchant(@merchant_2.id)).to be_empty
     end
 
     it '.total_revenue returns the sum of all item costs' do
@@ -116,7 +130,7 @@ RSpec.describe Invoice do
     it '.total_discounted_revenue returns total revenue minus applied discounts' do
       expect(@invoice_1.total_discounted_revenue).to eq(6810)
       expect(@invoice_1.total_discounted_revenue).to_not eq(6650)
-      expect(@invoice_1.total_discounted_revenue).to_not eq(7300) 
+      expect(@invoice_1.total_discounted_revenue).to_not eq(7300)
     end
   end
 end
