@@ -84,30 +84,16 @@ RSpec.describe "A merchant's bulk discounts index page" do
 
       visit "/merchants/#{@merchant_1.id}/bulk_discounts"
 
-      expect(page).to have_css('#next-3-holidays')
+      within '#upcoming_holidays' do
+        expect(page).to have_content('Name: Martin Luther King, Jr. Day')
+        expect(page).to have_content('Date: 2020-01-20')
 
-      within '#next-3-holidays' do
-        expect(page).to have_css('#martin-luther-king-jr-day')
-        expect(page).to have_css('#presidents-day')
-        expect(page).to have_css('#good-friday', count: 1)
-        expect(page).to_not have_css('#memorial-day')
-      end
-
-      within '#martin-luther-king-jr-day' do
-        expect(page).to have_content('Name: Martin Luther King Jr. Day')
-        expect(page).to have_content('Date: 2022-01-20')
-      end
-
-      within '#presidents-day' do
-        expect(page).to have_content("President's day")
+        expect(page).to have_content("Presidents Day")
         expect(page).to have_content('Date: 2020-02-17')
-      end
 
-      within '#good-friday' do
         expect(page).to have_content('Name: Good Friday')
         expect(page).to have_content('Date: 2020-04-10')
       end
-
       Timecop.return
     end
   end

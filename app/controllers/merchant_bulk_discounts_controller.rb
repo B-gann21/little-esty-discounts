@@ -1,7 +1,7 @@
 class MerchantBulkDiscountsController < ApplicationController
   def index
     @merchant = Merchant.find(params[:id])
-    @holidays = HolidayFacade.new.next_3_holidays
+    @next_3_holidays = HolidayFacade.new.next_3_holidays
   end
 
   def show

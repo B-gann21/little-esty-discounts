@@ -9,8 +9,9 @@ class HolidayFacade
     end
   end
 
-  def all_dates
-    @holidays.map { |holiday| holiday.name}
+  def next_3_holidays
+    upcoming_holidays = create_holidays.find_all { |holiday| holiday.date > Date.today.to_s }
+    upcoming_holidays.take(3)
   end
 
   def service

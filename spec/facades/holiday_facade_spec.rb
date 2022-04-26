@@ -23,17 +23,6 @@ RSpec.describe HolidayFacade do
       Timecop.return
     end
 
-    it '.all_dates returns an array of all the dates' do
-      Timecop.freeze(2020, 1, 2)
-      facade = HolidayFacade.new
-      dates = facade.all_dates
-
-      expect(dates).to be_a(Array)
-      expect(dates.length).to eq(12)
-      expect(dates).to be_all(String)
-      Timecop.return
-    end
-
     it '.next_3_holidays returns 3 holiday POROs of the upcoming 3 holidays' do
       Timecop.freeze(2020, 1, 2)
 
@@ -45,8 +34,8 @@ RSpec.describe HolidayFacade do
       expect(holidays).to be_all(Holiday)
       expect(holidays.any?(Hash)).to be(false)
 
-      expect(holidays[0].name).to eq('Martin Luther King Jr. Day')
-      expect(holidays[1].name).to eq("Presidents day")
+      expect(holidays[0].name).to eq('Martin Luther King, Jr. Day')
+      expect(holidays[1].name).to eq("Presidents Day")
       expect(holidays[2].name).to eq("Good Friday")
 
       Timecop.return
