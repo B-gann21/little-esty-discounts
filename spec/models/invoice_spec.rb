@@ -131,6 +131,7 @@ RSpec.describe Invoice do
     end
 
     it '.discounted_revenue_for(merchant_id) just returns revenue_for(merchant_id) if no discounts are applied' do
+      # require "pry"; binding.pry
       expect(@invoice_2.discounted_revenue_for(@merchant_2.id)).to eq(@invoice_2.revenue_for(@merchant_2.id))
       expect(@invoice_2.discounted_revenue_for(@merchant.id)).to eq(0)
     end

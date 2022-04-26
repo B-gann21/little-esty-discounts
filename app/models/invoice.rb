@@ -24,11 +24,17 @@ class Invoice < ApplicationRecord
   end
 
   def discounted_revenue_for(merchant_id)
-    if orders_that_can_be_discounted.empty?
-      revenue_for(merchant_id)
-    else
-      calculate_discounted_revenue_for(merchant_id)
+    total = 0
+    orders_that_can_be_discounted_for(merchant_id).each do |invoice_item|
+      total += (1.0 - invoice_item.best_deal.to_f / 100) * (invoice_item.quantity * invoice_item.unit_price)
     end
+
+    get_items_from_merchant(merchant_id).each do |invoice_item|
+      if !orders_that_can_be_discounted_for(merchant_id).include?(invoice_item)
+        total += invoice_item.quantity * invoice_item.unit_price
+      end
+    end
+    total.to_i
   end
 
   def orders_that_can_be_discounted_for(merchant_id)
@@ -82,17 +88,4 @@ private
     total.to_i
   end
 
-  def calculate_discounted_revenue_for(merchant_id)
-    total = 0
-    orders_that_can_be_discounted_for(merchant_id).each do |invoice_item|
-      total += (1.0 - invoice_item.best_deal.to_f / 100) * (invoice_item.quantity * invoice_item.unit_price)
-    end
-
-    get_items_from_merchant(merchant_id).each do |invoice_item|
-      if !orders_that_can_be_discounted_for(merchant_id).include?(invoice_item)
-        total += invoice_item.quantity * invoice_item.unit_price
-      end
-    end
-    total.to_i
-  end
 end
