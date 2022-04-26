@@ -72,7 +72,6 @@ RSpec.describe Invoice do
       expect(@invoice.revenue_for(@merchant_2.id)).to_not eq(3300)
     end
 
-
     it '.total_revenue returns the sum of all item costs' do
       merchant = Merchant.create!(name: 'Brylan')
       item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
@@ -129,6 +128,16 @@ RSpec.describe Invoice do
 
       expect(invoice_item_1b.best_deal).to eq(10)
       expect(invoice_item_1b.best_deal).to_not eq(8)
+    end
+
+    it '.discounted_revenue_for(merchant_id) just returns revenue_for(merchant_id) if no discounts are applied' do
+      expect(@invoice_2.discounted_revenue_for(@merchant_2.id)).to eq(@invoice_2.revenue_for(@merchant_2.id))
+      expect(@invoice_2.discounted_revenue_for(@merchant.id)).to eq(0)
+    end
+
+    it '.discounted_revenue_for(merchant_id) returns the discounted revenue for a given merchant' do
+      expect(@invoice_1.discounted_revenue_for(@merchant.id)).to eq(2970)
+      expect(@invoice_1.discounted_revenue_for(@merchant.id)).to_not eq(3300)
     end
 
     it '.total_discounted_revenue just returns total_revenue if no discounts are applied' do
