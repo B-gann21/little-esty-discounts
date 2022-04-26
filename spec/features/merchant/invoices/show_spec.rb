@@ -14,6 +14,7 @@ RSpec.describe 'merchant invoice show page' do
     @invoice_2 = @customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
     @invoice_1.invoice_items.create!(item_id: @item_1.id, status: "shipped", quantity: 8, unit_price: 100)
     @invoice_1.invoice_items.create!(item_id: @item_2.id, status: "packaged", quantity: 5, unit_price: 500)
+    @invoice_1.invoice_items.create!(item_id: @item_3.id, status: "packaged", quantity: 5, unit_price: 500)
 
     visit "/merchants/#{@merchant.id}/invoices/#{@invoice_1.id}"
   end
@@ -28,9 +29,11 @@ RSpec.describe 'merchant invoice show page' do
 
 
   context 'invoice items' do
-    it 'should show the names of all items related to the invoice' do
+    it "should show the names of only the merchant's items that are on the invoice" do
       expect(page).to have_content("Bottle")
       expect(page).to have_content("Can")
+
+      expect(page).to_not have_css("#item-#{@item_3.id}")
       expect(page).to_not have_content("Jar")
     end
 
@@ -48,8 +51,9 @@ RSpec.describe 'merchant invoice show page' do
       end
     end
 
-    it "displays the total revenue for all items on the invoice" do
-      expect(page).to have_content("Total Revenue: $33.00")
+    it "displays the total revenue for the merchant's items on the invoice" do
+      expect(page).to have_content("Total Revenue: $38.00")
+      expect(page).to_not have_content("Total Revenue: $58.00")
     end
 
     it 'displays a select box to change an invoice_item status' do
@@ -105,7 +109,7 @@ RSpec.describe 'merchant invoice show page' do
       end
     end
 
-    it 'displays the discounted revenue next to the total revenue' do
+    it 'displays the discounted revenue next to the total revenue, IF any discounts were applied' do
       merchant = Merchant.create!(name: 'Brylan')
       merchant_2 = Merchant.create!(name: 'Chris')
 
@@ -118,7 +122,6 @@ RSpec.describe 'merchant invoice show page' do
       invoice_2 = customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
       invoice_item_1a = invoice_1.invoice_items.create!(item_id: item_1.id, status: "shipped", quantity: 8, unit_price: 100)
       invoice_item_1b = invoice_1.invoice_items.create!(item_id: item_2.id, status: "packaged", quantity: 5, unit_price: 500)
-      invoice_item_1c = invoice_1.invoice_items.create!(item_id: item_2.id, status: "packaged", quantity: 4, unit_price: 500)
       invoice_item_1d = invoice_1.invoice_items.create!(item_id: item_3.id, status: "packaged", quantity: 4, unit_price: 500)
 
       discount_1 = merchant.bulk_discounts.create!(name: "Buy 5 items, get 10% off", quantity_threshold: 5, discount_percent: 10)
@@ -127,17 +130,16 @@ RSpec.describe 'merchant invoice show page' do
 
       visit "/merchants/#{merchant.id}/invoices/#{invoice_1.id}"
       within '#revenue' do
-        expect(page).to have_content("Total Revenue: $73.00")
-        expect(page).to_not have_content("Total Revenue: $12.00") 
-        expect(page).to_not have_content("Total Revenue: $85.00")
-        expect(page).to_not have_content("Total Revenue: $68.10")
-        expect(page).to have_content("Discounted Revenue: $68.10")
+        expect(page).to have_content("Total Revenue: $33.00")
+        expect(page).to_not have_content("Total Revenue: $53.00")
+        expect(page).to_not have_content("Total Revenue: $29.70")
+        expect(page).to have_content("Discounted Revenue: $29.00")
       end
 
-      visit "/merchants/#{merchant_2.id}/invoices/#{invoice_2.id}"
-      expect(page).to have_content('Total Revenue: $20.00') 
-      expect(page).to_not have_content('Discounted Revenue: $20.00') 
-      expect(page).to_not have_content('Discounted Revenue: $18.00') 
+      visit "/merchants/#{merchant_2.id}/invoices/#{invoice_1.id}"
+      expect(page).to have_content('Total Revenue: $20.00')
+      expect(page).to_not have_content('Discounted Revenue: $20.00')
+      expect(page).to_not have_content('Discounted Revenue: $18.00')
     end
   end
 end
