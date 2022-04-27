@@ -89,9 +89,9 @@ RSpec.describe 'Admin Invoice Show page' do
       invoice_item_1c = item_2a.invoice_items.create!(invoice_id: invoice_1.id, quantity: 5, unit_price: 400, status: 2)
 
       invoice_2 = customer.invoices.create!(status: 'in progress')
-      invoice_item_2a = item_1a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 2, unit_price: 400, status: 2) 
-      invoice_item_2b = item_1b.invoice_items.create!(invoice_id: invoice_2.id, quantity: 3, unit_price: 400, status: 2) 
-      invoice_item_2c = item_2a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 400, status: 2) 
+      invoice_item_2a = item_1a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 2, unit_price: 400, status: 2)
+      invoice_item_2b = item_1b.invoice_items.create!(invoice_id: invoice_2.id, quantity: 3, unit_price: 400, status: 2)
+      invoice_item_2c = item_2a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 400, status: 2)
 
       visit "/admin/invoices/#{invoice_1.id}"
       expect(page).to have_content('Discounted Revenue: $67.00')
@@ -100,8 +100,33 @@ RSpec.describe 'Admin Invoice Show page' do
 
       visit "/admin/invoices/#{invoice_2.id}"
       expect(page).to have_content('Total Revenue: $40.00')
-      expect(page).to_not have_content('Discounted Revenue: $40.00')
-      expect(page).to_not have_content('Discounted Revenue: $37.00')
+      expect(page).to_not have_content('Discounted Revenue:')
+    end
+
+    it 'does not show discounted revenue if no discounts are applied' do
+      merchant_1 = Merchant.create!(name: 'Brylan')
+      discount_1a = merchant_1.bulk_discounts.create!(name: 'buy 5 get 15% off', quantity_threshold: 5, discount_percent: 15)
+      discount_1b = merchant_1.bulk_discounts.create!(name: 'buy 10 get 25% off', quantity_threshold: 10, discount_percent: 25)
+      item_1a = merchant_1.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
+      item_1b = merchant_1.items.create!(name: 'Can', unit_price: 500, description: 'Soda')
+
+      merchant_2 = Merchant.create!(name: 'Chris')
+      item_2a = merchant_2.items.create!(name: 'Jar', unit_price: 400, description: 'Jelly')
+
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice_1 = customer.invoices.create(status: "in progress")
+      invoice_item_1a = item_1a.invoice_items.create!(invoice_id: invoice_1.id, quantity: 5, unit_price: 400, status: 2)
+      invoice_item_1b = item_1b.invoice_items.create!(invoice_id: invoice_1.id, quantity: 10, unit_price: 400, status: 2)
+      invoice_item_1c = item_2a.invoice_items.create!(invoice_id: invoice_1.id, quantity: 5, unit_price: 400, status: 2)
+
+      invoice_2 = customer.invoices.create!(status: 'in progress')
+      invoice_item_2a = item_1a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 2, unit_price: 400, status: 2)
+      invoice_item_2b = item_1b.invoice_items.create!(invoice_id: invoice_2.id, quantity: 3, unit_price: 400, status: 2)
+      invoice_item_2c = item_2a.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 400, status: 2)
+      
+      visit "/admin/invoices/#{invoice_2.id}"
+      expect(page).to have_content('Total Revenue: $40.00')
+      expect(page).to_not have_content('Discounted Revenue:')
     end
   end
 end
