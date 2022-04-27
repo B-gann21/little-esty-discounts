@@ -54,25 +54,7 @@ RSpec.describe Invoice do
       expect(Invoice.incomplete_invoices).to_not include(@invoice_3)
     end
 
-    it '.get_items_from_merchant(merchant_id) returns all invoice items with the given merchant_id' do
-      expect(@invoice.get_items_from_merchant(@merchant.id)).to include(@invoice_item_1, @invoice_item_1a)
-      expect(@invoice.get_items_from_merchant(@merchant_2.id)).to include(@invoice_item_1b)
-
-      expect(@invoice.get_items_from_merchant(@merchant.id)).to_not include(@invoice_item_1b)
-      expect(@invoice.get_items_from_merchant(@merchant_2.id)).to_not include(@invoice_item_1, @invoice_item_1a)
-      expect(@invoice_2.get_items_from_merchant(@merchant_2.id)).to be_empty
-      expect(@invoice_3.get_items_from_merchant(@merchant_2.id)).to be_empty
-    end
-
-    it '.revenue_for(merchant_id) returns the revenue made by a given merchant' do
-      expect(@invoice.revenue_for(@merchant.id)).to eq(3300)
-      expect(@invoice.revenue_for(@merchant_2.id)).to eq(2000)
-
-      expect(@invoice.revenue_for(@merchant.id)).to_not eq(5300)
-      expect(@invoice.revenue_for(@merchant_2.id)).to_not eq(3300)
-    end
-
-    it '.total_revenue returns the sum of all item costs' do
+    it '.total_invoice_revenue returns the sum of all item costs' do
       merchant = Merchant.create!(name: 'Brylan')
       item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
       item_2 = merchant.items.create!(name: 'Can', unit_price: 3, description: 'Soda')
@@ -82,7 +64,7 @@ RSpec.describe Invoice do
       item_1.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 4, status: 2)
       item_2.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 4, status: 2)
       item_3.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 4, status: 2)
-      expect(invoice.total_revenue).to eq(36)
+      expect(invoice.total_invoice_revenue).to eq(36)
     end
   end
 
@@ -107,41 +89,14 @@ RSpec.describe Invoice do
       @invoice_item_2 = @invoice_2.invoice_items.create!(item_id: @item_3.id, quantity: 3, unit_price: 400, status: 2)
     end
 
-    it '.orders_that_can_be_discounted_for(merchant_id) returns discounted orders for a merchant' do
-      expect(@invoice_1.orders_that_can_be_discounted_for(@merchant.id)).to include(@invoice_item_1a, @invoice_item_1b)
-      expect(@invoice_1.orders_that_can_be_discounted_for(@merchant.id)).to_not include(@invoice_item_1d)
-    end
-
     it '.orders_that_can_be_discounted returns invoice_items that can qualify for a discount' do
       expect(@invoice_1.orders_that_can_be_discounted.sort).to eq([@invoice_item_1a, @invoice_item_1b].sort)
       expect(@invoice_1.orders_that_can_be_discounted).to_not include([@invoice_item_1d, @invoice_item_2])
       expect(@invoice_2.orders_that_can_be_discounted).to eq([])
     end
 
-    it 'invoice_items in .orders_that_can_be_discounted are matched with the highest discount_percent' do
-      qualified_orders_1 = @invoice_1.orders_that_can_be_discounted.sort
-      invoice_item_1a = qualified_orders_1[0]
-      invoice_item_1b = qualified_orders_1[1]
-
-      expect(invoice_item_1a.best_deal).to eq(10)
-      expect(invoice_item_1a.best_deal).to_not eq(8)
-
-      expect(invoice_item_1b.best_deal).to eq(10)
-      expect(invoice_item_1b.best_deal).to_not eq(8)
-    end
-
-    it '.discounted_revenue_for(merchant_id) just returns revenue_for(merchant_id) if no discounts are applied' do
-      expect(@invoice_2.discounted_revenue_for(@merchant_2.id)).to eq(@invoice_2.revenue_for(@merchant_2.id))
-      expect(@invoice_2.discounted_revenue_for(@merchant.id)).to eq(0)
-    end
-
-    it '.discounted_revenue_for(merchant_id) returns the discounted revenue for a given merchant' do
-      expect(@invoice_1.discounted_revenue_for(@merchant.id)).to eq(2970)
-      expect(@invoice_1.discounted_revenue_for(@merchant.id)).to_not eq(3300)
-    end
-
     it '.total_discounted_revenue just returns total_revenue if no discounts are applied' do
-      expect(@invoice_2.total_discounted_revenue).to eq(@invoice_2.total_revenue)
+      expect(@invoice_2.total_discounted_revenue).to eq(@invoice_2.total_invoice_revenue)
       expect(@invoice_2.total_discounted_revenue).to_not eq(1104)
     end
 

@@ -21,6 +21,18 @@ class InvoiceItem < ApplicationRecord
                   .first
   end
 
+  def total_revenue
+    quantity * unit_price
+  end
+
+  def discounted_revenue
+    if best_bulk_discount
+      (1 - best_bulk_discount.discount_percent.to_f / 100) * (quantity * unit_price)
+    else
+      total_revenue
+    end
+  end
+
   def self.items_total_revenue
     sum('quantity * unit_price')
   end

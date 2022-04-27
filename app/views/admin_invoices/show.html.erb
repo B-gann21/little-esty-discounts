@@ -28,9 +28,9 @@ Customer Name: <%= "#{@invoice.customer.first_name} #{@invoice.customer.last_nam
   </ul>
 <% end %>
 
-<% if @invoice.total_revenue == @invoice.total_discounted_revenue %>
-  <h2>Total Revenue: $<%= @invoice.total_revenue.to_s.insert(-3,".") %></h2>
-<% else %>
-  <h2>Total Revenue: $<%= @invoice.total_revenue.to_s.insert(-3,".") %></h2>
-  <h2>Discounted Revenue: $<%= @invoice.total_discounted_revenue.to_s.insert(-3,".") %></h2>
-<% end %>
+<div id="revenue">
+  <h2>Total Revenue: $<%= @invoice.total_invoice_revenue.to_s.insert(-3,".") %> </h2>
+  <% unless @invoice.orders_that_can_be_discounted.empty? %>
+    <h2>Discounted Revenue: $<%= @invoice.total_discounted_revenue.to_s.insert(-3,".") %></h2>
+  <% end %>
+</div>

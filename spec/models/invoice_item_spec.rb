@@ -12,7 +12,7 @@ RSpec.describe InvoiceItem do
                              description: 'tastiest chocolate pudding on the east coast')
 
     @item_2 = @merchant.items.create!(name: 'Chocolate Delight', unit_price: 500,
-                             description: 'tastiest chocolate pudding on the east coast')
+                               description: 'tastiest chocolate pudding on the east coast')
 
     @invoice_item = InvoiceItem.create!(invoice_id: @invoice.id, item_id: @item.id,
                                             status: 'packaged', quantity: 9, unit_price: 13232)
@@ -46,7 +46,7 @@ RSpec.describe InvoiceItem do
   end
 
   describe 'instance methods' do
-    it '.qualified_bulk_discounts returns all bulk discounts that an invoice item qualifies for' do
+    it '.best_bulk_discount returns the best bulk discount that an invoice item qualifies for' do
       merchant = Merchant.create!(name: 'Brylan')
       merchant_2 = Merchant.create!(name: 'Chris')
 
@@ -70,14 +70,61 @@ RSpec.describe InvoiceItem do
 
       expect(invoice_item_1a.best_bulk_discount).to be_a(BulkDiscount)
       expect(invoice_item_1a.best_bulk_discount).to_not be_a(Array)
-      expect(invoice_item_1a.best_bulk_discount.quantity_threshold).to eq(discount_1a.quantity_threshold)
-      expect(invoice_item_1a.best_bulk_discount.quantity_threshold).to_not eq(discount_1b.quantity_threshold)
-      expect(invoice_item_1a.best_bulk_discount.discount_percent).to eq(discount_1a.discount_percent)
-      expect(invoice_item_1a.best_bulk_discount.discount_percent).to_not eq(discount_1b.discount_percent)
 
-      expect(invoice_item_1b.best_bulk_discount.quantity_threshold).to eq(discount_1.quantity_threshold)
-      expect(invoice_item_1b.best_bulk_discount.quantity_threshold).to_not eq(discount_1a.quantity_threshold)
-      expect(invoice_item_1b.best_bulk_discount.quantity_threshold).to_not eq(discount_1b.quantity_threshold)
+      expect(invoice_item_1a.best_bulk_discount.quantity_threshold).to eq(5)
+      expect(invoice_item_1a.best_bulk_discount.quantity_threshold).to_not eq(2)
+
+      expect(invoice_item_1a.best_bulk_discount.discount_percent).to eq(10)
+      expect(invoice_item_1a.best_bulk_discount.discount_percent).to_not eq(8)
+
+      expect(invoice_item_1b.best_bulk_discount.quantity_threshold).to eq(10)
+      expect(invoice_item_1b.best_bulk_discount.quantity_threshold).to_not eq(5)
+      expect(invoice_item_1b.best_bulk_discount.quantity_threshold).to_not eq(2)
+    end
+
+    it '.total_revenue returns the total revenue of quantity * unit_price' do
+      merchant = Merchant.create!(name: 'Brylan')
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 500, description: 'Soda')
+
+      merchant_2 = Merchant.create!(name: 'Chris')
+      item_3 = merchant_2.items.create!(name: 'Jar', unit_price: 400, description: 'Jelly')
+
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice_1 = customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      invoice_2 = customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+
+      invoice_item_1a = invoice_1.invoice_items.create!(item_id: item_1.id, quantity: 3, unit_price: 500, status: 'packaged')
+      invoice_item_1b = invoice_1.invoice_items.create!(item_id: item_2.id, quantity: 4, unit_price: 500, status: 'packaged')
+
+      expect(invoice_item_1a.total_revenue).to eq(1500)
+      expect(invoice_item_1a.total_revenue).to_not eq(2000)
+
+      expect(invoice_item_1b.total_revenue).to eq(2000)
+      expect(invoice_item_1b.total_revenue).to_not eq(1500)
+    end
+
+    it '.discounted_revenue applies the discount_percent of the best_bulk_discount' do
+      merchant = Merchant.create!(name: 'Brylan')
+      discount_1 = merchant.bulk_discounts.create!(name: 'Bulk Sale', quantity_threshold: 4, discount_percent: 20)
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 500, description: 'Soda')
+
+      merchant_2 = Merchant.create!(name: 'Chris')
+      item_3 = merchant_2.items.create!(name: 'Jar', unit_price: 400, description: 'Jelly')
+
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice_1 = customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      invoice_2 = customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+
+      invoice_item_1a = invoice_1.invoice_items.create!(item_id: item_1.id, quantity: 3, unit_price: 500, status: 'packaged')
+      invoice_item_1b = invoice_1.invoice_items.create!(item_id: item_2.id, quantity: 4, unit_price: 500, status: 'packaged')
+
+      expect(invoice_item_1a.discounted_revenue).to eq(1500)
+      expect(invoice_item_1a.discounted_revenue).to_not eq(1200)
+
+      expect(invoice_item_1b.discounted_revenue).to eq(1600)
+      expect(invoice_item_1b.discounted_revenue).to_not eq(2000)
     end
   end
 
