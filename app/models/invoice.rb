@@ -15,16 +15,16 @@ class Invoice < ApplicationRecord
   end
 
   def total_invoice_revenue
-    invoice_items.sum { |invoice_item| invoice_item.total_revenue }
+    invoice_items.sum { |invoice_item| invoice_item.total_revenue }.to_i
   end
 
   def total_discounted_revenue
-    invoice_items.sum { |invoice_item| invoice_item.discounted_revenue }
+    invoice_items.sum { |invoice_item| invoice_item.discounted_revenue }.to_i
   end
 
   def orders_that_can_be_discounted
     invoice_items.joins(item: {merchant: :bulk_discounts})
-    .select("invoice_items.*, max(bulk_discounts.discount_percent) as best_deal")
+    .select("invoice_items.*")
     .where("invoice_items.quantity >= bulk_discounts.quantity_threshold")
     .group(:id)
     .compact

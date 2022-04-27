@@ -46,7 +46,7 @@ RSpec.describe InvoiceItem do
   end
 
   describe 'instance methods' do
-    it '.best_bulk_discounts returns the best bulk discount that an invoice item qualifies for' do
+    it '.best_bulk_discount returns the best bulk discount that an invoice item qualifies for' do
       merchant = Merchant.create!(name: 'Brylan')
       merchant_2 = Merchant.create!(name: 'Chris')
 
@@ -104,7 +104,7 @@ RSpec.describe InvoiceItem do
       expect(invoice_item_1b.total_revenue).to_not eq(1500)
     end
 
-    it '.total_revenue applies discounts automatically if qualified for any discounts' do
+    it '.discounted_revenue applies the discount_percent of the best_bulk_discount' do
       merchant = Merchant.create!(name: 'Brylan')
       discount_1 = merchant.bulk_discounts.create!(name: 'Bulk Sale', quantity_threshold: 4, discount_percent: 20)
       item_1 = merchant.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
@@ -120,11 +120,11 @@ RSpec.describe InvoiceItem do
       invoice_item_1a = invoice_1.invoice_items.create!(item_id: item_1.id, quantity: 3, unit_price: 500, status: 'packaged')
       invoice_item_1b = invoice_1.invoice_items.create!(item_id: item_2.id, quantity: 4, unit_price: 500, status: 'packaged')
 
-      expect(invoice_item_1a.total_revenue).to eq(1500)
-      expect(invoice_item_1a.total_revenue).to_not eq(1200)
+      expect(invoice_item_1a.discounted_revenue).to eq(1500)
+      expect(invoice_item_1a.discounted_revenue).to_not eq(1200)
 
-      expect(invoice_item_1b.total_revenue).to eq(1600)
-      expect(invoice_item_1b.total_revenue).to_not eq(2000)
+      expect(invoice_item_1b.discounted_revenue).to eq(1600)
+      expect(invoice_item_1b.discounted_revenue).to_not eq(2000)
     end
   end
 
