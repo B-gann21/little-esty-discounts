@@ -15,6 +15,7 @@ This project requires Ruby 2.7.4.
     * `bundle`
     * `rails db:create`
 * Run the test suite with `bundle exec rspec`.
+* If you are running the server locally, you must run `rails csv_load:all` to seed the database with Merchants, Items and Invoices
 * Run your development server with `rails s` to see the app in action.
 
 # Learning Goals
@@ -36,14 +37,14 @@ This project requires Ruby 2.7.4.
 - If the quantity of an item ordered meets or exceeds the quantity threshold, then the percentage discount should apply to that item only. Other items that did not meet the quantity threshold will not be affected.
 The quantities of items ordered cannot be added together to meet the quantity thresholds, e.g. a customer cannot order 1 of Item A and 1 of Item B to meet a quantity threshold of 2. They must order 2 of Item A and/or 2 of Item B
 
-### Interaction with this web app is described through the following user stories. They can be performed by visiting [the heroku app](https://etsy-bulk-discounts.herokuapp.com), or by running `rails s` in your terminal and navigating to `localhost:3000/{uri}`.
+### Interaction with this web app is described through the following user stories. They can be performed by visiting [the heroku app](https://etsy-bulk-discounts.herokuapp.com) and adding '/{uri}' to the end of the url bar, or by running `rails s` in your terminal and navigating to `localhost:3000/{uri}`.
 
 User Stories - 
 ```
 Merchant Bulk Discounts Index
 
 As a merchant
-When I visit my merchant dashboard 
+When I visit my merchant dashboard (example URI: /merchants/50/dashboard)
 Then I see a link to view all my discounts
 When I click this link
 Then I am taken to my bulk discounts index page
@@ -56,7 +57,7 @@ And each bulk discount listed includes a link to its show page
 Merchant Bulk Discount Create
 
 As a merchant
-When I visit my bulk discounts index
+When I visit my bulk discounts index (example URI: /merchants/50/bulk_discounts)
 Then I see a link to create a new discount
 When I click this link
 Then I am taken to a new page where I see a form to add a new bulk discount
@@ -79,7 +80,7 @@ And I no longer see the discount listed
 Merchant Bulk Discount Show
 
 As a merchant
-When I visit my bulk discount show page 
+When I visit my bulk discount show page (example URI: '/merchants/50/bulk_discounts')
 Then I see the bulk discount's quantity threshold and percentage discount
 ```
 
@@ -87,7 +88,7 @@ Then I see the bulk discount's quantity threshold and percentage discount
 Merchant Bulk Discount Edit
 
 As a merchant
-When I visit my bulk discount show page
+When I visit my bulk discount show page (example URI: '/merchants/50/bulk_discounts/10')
 Then I see a link to edit the bulk discount
 When I click this link
 Then I am taken to a new page with a form to edit the discount
@@ -101,7 +102,7 @@ And I see that the discount's attributes have been updated
 Merchant Invoice Show Page: Total Revenue and Discounted Revenue
 
 As a merchant
-When I visit my merchant invoice show page
+When I visit my merchant invoice show page (example URI: '/merchants/50/invoices/621')
 Then I see the total revenue for my merchant from this invoice (not including discounts)
 And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
 ```
@@ -118,7 +119,7 @@ Next to each invoice item I see a link to the show page for the bulk discount th
 Admin Invoice Show Page: Total Revenue and Discounted Revenue
 
 As an admin
-When I visit an admin invoice show page
+When I visit an admin invoice show page (example URI: '/admin/invoices/631')
 Then I see the total revenue from this invoice (not including discounts)
 And I see the total discounted revenue from this invoice which includes bulk discounts in the calculation
 ```
