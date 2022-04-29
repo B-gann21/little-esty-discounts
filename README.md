@@ -1,6 +1,22 @@
 # Bulk Discounts
 This project is an extension of the Little Esty Shop group project. You will add functionality for merchants to create bulk discounts for their items. A “bulk discount” is a discount based on the quantity of items the customer is buying, for example “20% off orders of 10 or more items”.
 
+## Requirements
+- Rails 5.2.x
+- PostgreSQL
+
+## Setup
+
+This project requires Ruby 2.7.4.
+
+* Fork this repository
+* Clone your fork
+* From the command line, install gems and set up your DB:
+    * `bundle`
+    * `rails db:create`
+* Run the test suite with `bundle exec rspec`.
+* Run your development server with `rails s` to see the app in action.
+
 # Learning Goals
 - Write migrations to create tables and relationships between tables
 - Implement CRUD functionality for a resource using forms (form_tag or form_with), buttons, and links
@@ -20,13 +36,14 @@ This project is an extension of the Little Esty Shop group project. You will add
 - If the quantity of an item ordered meets or exceeds the quantity threshold, then the percentage discount should apply to that item only. Other items that did not meet the quantity threshold will not be affected.
 The quantities of items ordered cannot be added together to meet the quantity thresholds, e.g. a customer cannot order 1 of Item A and 1 of Item B to meet a quantity threshold of 2. They must order 2 of Item A and/or 2 of Item B
 
+### Interaction with this web app is described through the following user stories. They can be performed by visiting [the heroku app](etsy-bulk-discounts.herokuapp.com), or by running `rails s` in your terminal and navigating to `localhost:3000/{uri}`.
 
 User Stories - 
 ```
 Merchant Bulk Discounts Index
 
 As a merchant
-When I visit my merchant dashboard
+When I visit my merchant dashboard 
 Then I see a link to view all my discounts
 When I click this link
 Then I am taken to my bulk discounts index page
@@ -62,7 +79,7 @@ And I no longer see the discount listed
 Merchant Bulk Discount Show
 
 As a merchant
-When I visit my bulk discount show page
+When I visit my bulk discount show page 
 Then I see the bulk discount's quantity threshold and percentage discount
 ```
 
