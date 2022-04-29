@@ -36,7 +36,7 @@ This project requires Ruby 2.7.4.
 - If the quantity of an item ordered meets or exceeds the quantity threshold, then the percentage discount should apply to that item only. Other items that did not meet the quantity threshold will not be affected.
 The quantities of items ordered cannot be added together to meet the quantity thresholds, e.g. a customer cannot order 1 of Item A and 1 of Item B to meet a quantity threshold of 2. They must order 2 of Item A and/or 2 of Item B
 
-### Interaction with this web app is described through the following user stories. They can be performed by visiting [the heroku app](etsy-bulk-discounts.herokuapp.com), or by running `rails s` in your terminal and navigating to `localhost:3000/{uri}`.
+### Interaction with this web app is described through the following user stories. They can be performed by visiting [the heroku app](hhtps://etsy-bulk-discounts.herokuapp.com), or by running `rails s` in your terminal and navigating to `localhost:3000/{uri}`.
 
 User Stories - 
 ```
