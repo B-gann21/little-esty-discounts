@@ -60,9 +60,9 @@ RSpec.describe 'merchant invoice show page' do
       expect(page).to_not have_css("#item-#{@item_4.id}")
     end
 
-    it "displays the total revenue for all items on the invoice" do
-      expect(page).to have_content("Total Revenue: $48.00")
-      expect(page).to_not have_content("Total Revenue: $73.00")
+    it "displays the total revenue for items that belong to the merchant on the invoice" do
+      expect(page).to have_content("Total Revenue: $33.00")
+      expect(page).to_not have_content("Total Revenue: $48.00")
     end
 
     it 'displays a select box to change an invoice_item status' do
@@ -120,7 +120,7 @@ RSpec.describe 'merchant invoice show page' do
       end
     end
 
-    it 'displays the discounted revenue next to the total revenue' do
+    it 'displays the discounted revenue for the merchant next to the total revenue' do
       merchant = Merchant.create!(name: 'Brylan')
       merchant_2 = Merchant.create!(name: 'Chris')
 
@@ -141,14 +141,14 @@ RSpec.describe 'merchant invoice show page' do
 
       visit "/merchants/#{merchant.id}/invoices/#{invoice_1.id}"
       within '#revenue' do
-        expect(page).to have_content("Total Revenue: $53.00")
-        expect(page).to_not have_content("Total Revenue: $33.00")
+        expect(page).to have_content("Total Revenue: $33.00")
+        expect(page).to_not have_content("Total Revenue: $53.00")
         expect(page).to_not have_content("Total Revenue: $29.70")
-        expect(page).to have_content("Discounted Revenue: $49.70")
+        expect(page).to have_content("Discounted Revenue: $29.70")
       end
     end
 
-    it 'does not display discounted_revenue if no orders qualify for a discount' do
+    it 'does not display discounted_revenue for the merchant if no orders qualify for a discount' do
       merchant = Merchant.create!(name: 'Brylan')
       merchant_2 = Merchant.create!(name: 'Chris')
 
