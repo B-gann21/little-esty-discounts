@@ -104,6 +104,14 @@ RSpec.describe Invoice do
       expect(@invoice_2.orders_that_can_be_discounted).to eq([])
     end
 
+    it '.discounted_revenue_for(merchant) returns the discounted revenue for items from a given merchant' do
+      @merchant_2.bulk_discounts.create!(name: 'buy 2 get 10% off', quantity_threshold: 2, discount_percent: 10)
+
+      expect(@invoice_1.discounted_revenue_for(@merchant)).to eq(2970)
+      expect(@invoice_1.discounted_revenue_for(@merchant_2)).to eq(1800)
+      expect(@invoice_1.discounted_revenue_for(@merchant)).to_not eq(@invoice_1.total_discounted_revenue)
+    end
+
     it '.total_discounted_revenue just returns total_revenue if no discounts are applied' do
       expect(@invoice_2.total_discounted_revenue).to eq(@invoice_2.total_invoice_revenue)
       expect(@invoice_2.total_discounted_revenue).to_not eq(1104)
